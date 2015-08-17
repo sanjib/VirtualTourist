@@ -10,10 +10,29 @@ import UIKit
 
 class PhotoAlbumViewController: UIViewController {
 
+    var pin: Pin!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let tc = tabBarController as! TabBarViewController
+        pin = tc.pin
 
-        // Do any additional setup after loading the view.
+        getFlickrPhotos()
+    }
+    
+    func getFlickrPhotos() {
+        FlickrClient.sharedInstance().photosSearch(pin) { photoProperties, errorString in
+            if errorString != nil {
+                
+            } else {
+                if let photoProperties = photoProperties {
+                    for photoProperty in photoProperties {
+                        println(photoProperty)
+                    }
+                }
+            }
+        }
     }
 
 }

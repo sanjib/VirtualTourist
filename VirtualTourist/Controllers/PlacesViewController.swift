@@ -9,11 +9,29 @@
 import UIKit
 
 class PlacesViewController: UIViewController {
+    var pin: Pin!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        let tc = tabBarController as! TabBarViewController
+        pin = tc.pin
+        
+        getGooglePlaces()
+    }
+    
+    func getGooglePlaces() {
+        GooglePlacesClient.sharedInstance().placesSearch(pin) { placesProperties, errorString in
+            if errorString != nil {
+                
+            } else {
+                if let placesProperties = placesProperties {
+                    for placeProperty in placesProperties {
+                        println(placeProperty)
+                    }
+                }
+            }
+        }
     }
 
 }

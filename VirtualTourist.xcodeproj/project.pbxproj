@@ -18,6 +18,10 @@
 		20F45A261B818825007A1E81 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A251B818825007A1E81 /* TabBarViewController.swift */; };
 		20F45A281B81888D007A1E81 /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A271B81888D007A1E81 /* PhotoAlbumViewController.swift */; };
 		20F45A2A1B8188AC007A1E81 /* PlacesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A291B8188AC007A1E81 /* PlacesViewController.swift */; };
+		20F45A2C1B81934D007A1E81 /* CommonRESTApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A2B1B81934D007A1E81 /* CommonRESTApi.swift */; };
+		20F45A2E1B81946C007A1E81 /* FlickrClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A2D1B81946C007A1E81 /* FlickrClient.swift */; };
+		20F45A301B81947D007A1E81 /* GooglePlacesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A2F1B81947D007A1E81 /* GooglePlacesClient.swift */; };
+		20F45A321B8194C3007A1E81 /* IJReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A311B8194C3007A1E81 /* IJReachability.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +50,10 @@
 		20F45A251B818825007A1E81 /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TabBarViewController.swift; path = Controllers/TabBarViewController.swift; sourceTree = "<group>"; };
 		20F45A271B81888D007A1E81 /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhotoAlbumViewController.swift; path = Controllers/PhotoAlbumViewController.swift; sourceTree = "<group>"; };
 		20F45A291B8188AC007A1E81 /* PlacesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlacesViewController.swift; path = Controllers/PlacesViewController.swift; sourceTree = "<group>"; };
+		20F45A2B1B81934D007A1E81 /* CommonRESTApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CommonRESTApi.swift; path = Models/CommonRESTApi.swift; sourceTree = "<group>"; };
+		20F45A2D1B81946C007A1E81 /* FlickrClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlickrClient.swift; path = Models/FlickrClient.swift; sourceTree = "<group>"; };
+		20F45A2F1B81947D007A1E81 /* GooglePlacesClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GooglePlacesClient.swift; path = Models/GooglePlacesClient.swift; sourceTree = "<group>"; };
+		20F45A311B8194C3007A1E81 /* IJReachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IJReachability.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +104,7 @@
 				20F45A031B817A3C007A1E81 /* Images.xcassets */,
 				20F45A051B817A3C007A1E81 /* LaunchScreen.xib */,
 				20F459FA1B817A3C007A1E81 /* Supporting Files */,
+				20F45A311B8194C3007A1E81 /* IJReachability.swift */,
 			);
 			path = VirtualTourist;
 			sourceTree = "<group>";
@@ -140,6 +149,9 @@
 			isa = PBXGroup;
 			children = (
 				20F45A231B817E54007A1E81 /* Pin.swift */,
+				20F45A2B1B81934D007A1E81 /* CommonRESTApi.swift */,
+				20F45A2D1B81946C007A1E81 /* FlickrClient.swift */,
+				20F45A2F1B81947D007A1E81 /* GooglePlacesClient.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -250,11 +262,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				20F45A2A1B8188AC007A1E81 /* PlacesViewController.swift in Sources */,
+				20F45A301B81947D007A1E81 /* GooglePlacesClient.swift in Sources */,
 				20F45A261B818825007A1E81 /* TabBarViewController.swift in Sources */,
+				20F45A2C1B81934D007A1E81 /* CommonRESTApi.swift in Sources */,
 				20F45A241B817E54007A1E81 /* Pin.swift in Sources */,
 				20F459FD1B817A3C007A1E81 /* AppDelegate.swift in Sources */,
 				20F45A281B81888D007A1E81 /* PhotoAlbumViewController.swift in Sources */,
+				20F45A321B8194C3007A1E81 /* IJReachability.swift in Sources */,
 				20F45A201B817C0F007A1E81 /* TravelLocationsViewController.swift in Sources */,
+				20F45A2E1B81946C007A1E81 /* FlickrClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
