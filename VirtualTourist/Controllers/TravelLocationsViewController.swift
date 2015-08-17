@@ -64,19 +64,18 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     }
     
     func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
+        // deselect the pin immediately after selection so that:
+        // - user can select it for an actual segue (pin gets selected after being dragged to a new location)
+        // - user can select the pin again after viewing an album (pin remains selected after user selection)
+        mapView.deselectAnnotation(view.annotation, animated: false)
         
-        // a pin will automatically get selected after being dragged to a new location
+        // as a pin will automatically get selected after being dragged to a new location
         // we want avoid an automatic segue so we track this with variable dragStateEnded
-        
         if dragStateEnded == true {
-            // a. deselect the pin so that user can click on it for the actual segue
-            mapView.deselectAnnotation(view.annotation, animated: false)
-            // b. set dragStateEnded back to false
             dragStateEnded = false
             return
         }
         
-        println("segue to photo album")
         selectedPin = view.annotation as? Pin
         performSegueWithIdentifier(pinSegueIdentifier, sender: self)
     }
