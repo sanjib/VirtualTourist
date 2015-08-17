@@ -15,6 +15,8 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     var longPressGestureRecognizer: UILongPressGestureRecognizer!
     let pinIdentifier = "pinIdentifier"
     
+    var dragStateEnded = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         travelLocationsMapView.delegate = self
@@ -59,10 +61,30 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     }
     
     func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
-        println("select pin")
+        
+        // a pin will automatically get selected after being dragged to a new location
+        // we want avoid an automatic segue so we track this with variable dragStateEnded
+        
+        if dragStateEnded == true {
+            // a. deselect the pin so that user can click on it for the actual segue
+            mapView.deselectAnnotation(view.annotation, animated: false)
+            // b. set dragStateEnded back to false
+            dragStateEnded = false
+            return
+        }
+        
+        println("segue to photo album")
     }
     
-
+    
+    func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
+        
+        // track the immediate result of an .Ending pin drag state
+        if newState == MKAnnotationViewDragState.Ending {
+            dragStateEnded = true
+        }
+    }
+    
     // MARK: - Navigation
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
