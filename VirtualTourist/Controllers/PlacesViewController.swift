@@ -17,7 +17,9 @@ class PlacesViewController: UIViewController {
         let tc = tabBarController as! TabBarViewController
         pin = tc.pin
         
-        getGooglePlaces()
+        if pin.places.count == 0 {
+            getGooglePlaces()
+        }
     }
     
     func getGooglePlaces() {
@@ -28,6 +30,8 @@ class PlacesViewController: UIViewController {
                 if let placesProperties = placesProperties {
                     for placeProperty in placesProperties {
                         println(placeProperty)
+                        let place = Place(placeName: placeProperty["placeName"]!, vicinity: placeProperty["vicinity"]!)
+                        self.pin.places.append(place)
                     }
                 }
             }
