@@ -116,32 +116,51 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCell" id="MNr-hI-orS">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCell" id="MNr-hI-orS" customClass="PhotoAlbumCollectionViewCell" customModule="VirtualTourist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="bgk-om-KPA">
+                                                    <rect key="frame" x="15" y="15" width="20" height="20"/>
+                                                </activityIndicatorView>
+                                            </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <constraints>
+                                            <constraint firstAttribute="centerX" secondItem="bgk-om-KPA" secondAttribute="centerX" id="CyE-zm-Hx6"/>
+                                            <constraint firstAttribute="centerY" secondItem="bgk-om-KPA" secondAttribute="centerY" id="jO7-97-QJ4"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="activityIndicator" destination="bgk-om-KPA" id="yvm-s6-dQf"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="KdR-8Y-3HS">
+                                <rect key="frame" x="280.5" y="280.5" width="37" height="37"/>
+                                <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="M3f-uN-4cL" firstAttribute="height" secondItem="WbG-Yb-8bO" secondAttribute="height" multiplier="1:6" id="8ho-TQ-3KJ"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="M3f-uN-4cL" secondAttribute="trailing" constant="-16" id="Cgx-nB-0vL"/>
-                            <constraint firstItem="M3f-uN-4cL" firstAttribute="top" secondItem="RhF-TC-qDG" secondAttribute="bottom" id="F4D-Nu-QzB"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="MHT-3L-cBS" secondAttribute="trailing" constant="-16" id="VHY-6K-gsl"/>
-                            <constraint firstItem="MHT-3L-cBS" firstAttribute="leading" secondItem="WbG-Yb-8bO" secondAttribute="leadingMargin" constant="-16" id="h4W-wD-4Qb"/>
-                            <constraint firstItem="MHT-3L-cBS" firstAttribute="top" secondItem="M3f-uN-4cL" secondAttribute="bottom" constant="8" id="njQ-jF-ej2"/>
-                            <constraint firstItem="M3f-uN-4cL" firstAttribute="leading" secondItem="WbG-Yb-8bO" secondAttribute="leadingMargin" constant="-16" id="woR-pR-bLk"/>
-                            <constraint firstItem="vDy-oq-EHZ" firstAttribute="top" secondItem="MHT-3L-cBS" secondAttribute="bottom" id="xVI-dN-TpF"/>
+                            <constraint firstItem="M3f-uN-4cL" firstAttribute="leading" secondItem="WbG-Yb-8bO" secondAttribute="leadingMargin" constant="-16" id="4Wi-Bl-eGq"/>
+                            <constraint firstItem="M3f-uN-4cL" firstAttribute="height" secondItem="WbG-Yb-8bO" secondAttribute="height" multiplier="1:6" id="A7S-a5-KW4"/>
+                            <constraint firstItem="M3f-uN-4cL" firstAttribute="top" secondItem="RhF-TC-qDG" secondAttribute="bottom" id="FnZ-PG-MMI"/>
+                            <constraint firstAttribute="centerX" secondItem="KdR-8Y-3HS" secondAttribute="centerX" constant="1" id="IIr-fB-U9R"/>
+                            <constraint firstItem="MHT-3L-cBS" firstAttribute="top" secondItem="M3f-uN-4cL" secondAttribute="bottom" constant="8" id="PTZ-2b-s5O"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="M3f-uN-4cL" secondAttribute="trailing" constant="-16" id="SEf-UX-U1h"/>
+                            <constraint firstItem="vDy-oq-EHZ" firstAttribute="top" secondItem="MHT-3L-cBS" secondAttribute="bottom" id="SWh-f9-DSf"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="MHT-3L-cBS" secondAttribute="trailing" constant="-16" id="iBn-w9-MlU"/>
+                            <constraint firstAttribute="centerY" secondItem="KdR-8Y-3HS" secondAttribute="centerY" constant="1" id="shq-kh-dR6"/>
+                            <constraint firstItem="MHT-3L-cBS" firstAttribute="leading" secondItem="WbG-Yb-8bO" secondAttribute="leadingMargin" constant="-16" id="xST-Lf-9XT"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Photos" id="oOZ-1H-foZ"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="KdR-8Y-3HS" id="tos-R6-PyJ"/>
                         <outlet property="collectionView" destination="MHT-3L-cBS" id="rhn-RK-Ls1"/>
                         <outlet property="mapView" destination="M3f-uN-4cL" id="03c-yu-fUl"/>
                     </connections>
