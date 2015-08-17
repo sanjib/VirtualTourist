@@ -15,6 +15,9 @@
 		20F45A201B817C0F007A1E81 /* TravelLocationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A1F1B817C0F007A1E81 /* TravelLocationsViewController.swift */; };
 		20F45A221B817CBE007A1E81 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20F45A211B817CBE007A1E81 /* MapKit.framework */; };
 		20F45A241B817E54007A1E81 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A231B817E54007A1E81 /* Pin.swift */; };
+		20F45A261B818825007A1E81 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A251B818825007A1E81 /* TabBarViewController.swift */; };
+		20F45A281B81888D007A1E81 /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A271B81888D007A1E81 /* PhotoAlbumViewController.swift */; };
+		20F45A2A1B8188AC007A1E81 /* PlacesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A291B8188AC007A1E81 /* PlacesViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +43,9 @@
 		20F45A1F1B817C0F007A1E81 /* TravelLocationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TravelLocationsViewController.swift; path = Controllers/TravelLocationsViewController.swift; sourceTree = "<group>"; };
 		20F45A211B817CBE007A1E81 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		20F45A231B817E54007A1E81 /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Pin.swift; path = Models/Pin.swift; sourceTree = "<group>"; };
+		20F45A251B818825007A1E81 /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TabBarViewController.swift; path = Controllers/TabBarViewController.swift; sourceTree = "<group>"; };
+		20F45A271B81888D007A1E81 /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhotoAlbumViewController.swift; path = Controllers/PhotoAlbumViewController.swift; sourceTree = "<group>"; };
+		20F45A291B8188AC007A1E81 /* PlacesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlacesViewController.swift; path = Controllers/PlacesViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +129,9 @@
 			isa = PBXGroup;
 			children = (
 				20F45A1F1B817C0F007A1E81 /* TravelLocationsViewController.swift */,
+				20F45A251B818825007A1E81 /* TabBarViewController.swift */,
+				20F45A271B81888D007A1E81 /* PhotoAlbumViewController.swift */,
+				20F45A291B8188AC007A1E81 /* PlacesViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -240,8 +249,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20F45A2A1B8188AC007A1E81 /* PlacesViewController.swift in Sources */,
+				20F45A261B818825007A1E81 /* TabBarViewController.swift in Sources */,
 				20F45A241B817E54007A1E81 /* Pin.swift in Sources */,
 				20F459FD1B817A3C007A1E81 /* AppDelegate.swift in Sources */,
+				20F45A281B81888D007A1E81 /* PhotoAlbumViewController.swift in Sources */,
 				20F45A201B817C0F007A1E81 /* TravelLocationsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

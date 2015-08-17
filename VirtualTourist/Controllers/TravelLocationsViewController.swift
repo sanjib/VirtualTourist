@@ -11,9 +11,12 @@ import MapKit
 
 class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var travelLocationsMapView: MKMapView!
+    
+    var selectedPin: Pin? = nil
 
     var longPressGestureRecognizer: UILongPressGestureRecognizer!
     let pinIdentifier = "pinIdentifier"
+    let pinSegueIdentifier = "PinSegue"
     
     var dragStateEnded = false
     
@@ -74,6 +77,8 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         }
         
         println("segue to photo album")
+        selectedPin = view.annotation as? Pin
+        performSegueWithIdentifier(pinSegueIdentifier, sender: self)
     }
     
     
@@ -88,7 +93,10 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     // MARK: - Navigation
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        
+        if segue.identifier == pinSegueIdentifier {
+            let vc = segue.destinationViewController as! TabBarViewController
+            vc.pin = selectedPin
+        }
     }
 
 }
