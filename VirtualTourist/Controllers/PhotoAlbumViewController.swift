@@ -18,7 +18,9 @@ class PhotoAlbumViewController: UIViewController {
         let tc = tabBarController as! TabBarViewController
         pin = tc.pin
 
-        getFlickrPhotos()
+        if pin.photos.count == 0 {
+            getFlickrPhotos()
+        }        
     }
     
     func getFlickrPhotos() {
@@ -29,6 +31,8 @@ class PhotoAlbumViewController: UIViewController {
                 if let photoProperties = photoProperties {
                     for photoProperty in photoProperties {
                         println(photoProperty)
+                        let photo = Photo(imageName: photoProperty["imageName"]!, remotePath: photoProperty["remotePath"]!)
+                        self.pin.photos.append(photo)
                     }
                 }
             }

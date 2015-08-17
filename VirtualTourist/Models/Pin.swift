@@ -12,6 +12,8 @@ import MapKit
 class Pin: NSObject, MKAnnotation {
     var latitude: Double
     var longitude: Double
+
+    var photos = [Photo]()
     
     init(latitude: Double, longitude: Double) {
         self.latitude = latitude

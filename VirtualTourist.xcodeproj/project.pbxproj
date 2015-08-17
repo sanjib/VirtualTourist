@@ -22,6 +22,7 @@
 		20F45A2E1B81946C007A1E81 /* FlickrClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A2D1B81946C007A1E81 /* FlickrClient.swift */; };
 		20F45A301B81947D007A1E81 /* GooglePlacesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A2F1B81947D007A1E81 /* GooglePlacesClient.swift */; };
 		20F45A321B8194C3007A1E81 /* IJReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A311B8194C3007A1E81 /* IJReachability.swift */; };
+		20F45A341B81BD72007A1E81 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A331B81BD72007A1E81 /* Photo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		20F45A2D1B81946C007A1E81 /* FlickrClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlickrClient.swift; path = Models/FlickrClient.swift; sourceTree = "<group>"; };
 		20F45A2F1B81947D007A1E81 /* GooglePlacesClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GooglePlacesClient.swift; path = Models/GooglePlacesClient.swift; sourceTree = "<group>"; };
 		20F45A311B8194C3007A1E81 /* IJReachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IJReachability.swift; sourceTree = "<group>"; };
+		20F45A331B81BD72007A1E81 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Photo.swift; path = Models/Photo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				20F45A231B817E54007A1E81 /* Pin.swift */,
+				20F45A331B81BD72007A1E81 /* Photo.swift */,
 				20F45A2B1B81934D007A1E81 /* CommonRESTApi.swift */,
 				20F45A2D1B81946C007A1E81 /* FlickrClient.swift */,
 				20F45A2F1B81947D007A1E81 /* GooglePlacesClient.swift */,
@@ -268,6 +271,7 @@
 				20F45A241B817E54007A1E81 /* Pin.swift in Sources */,
 				20F459FD1B817A3C007A1E81 /* AppDelegate.swift in Sources */,
 				20F45A281B81888D007A1E81 /* PhotoAlbumViewController.swift in Sources */,
+				20F45A341B81BD72007A1E81 /* Photo.swift in Sources */,
 				20F45A321B8194C3007A1E81 /* IJReachability.swift in Sources */,
 				20F45A201B817C0F007A1E81 /* TravelLocationsViewController.swift in Sources */,
 				20F45A2E1B81946C007A1E81 /* FlickrClient.swift in Sources */,
