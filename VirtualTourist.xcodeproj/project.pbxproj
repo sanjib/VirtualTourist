@@ -14,6 +14,7 @@
 		20F45A131B817A3C007A1E81 /* VirtualTouristTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A121B817A3C007A1E81 /* VirtualTouristTests.swift */; };
 		20F45A201B817C0F007A1E81 /* TravelLocationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A1F1B817C0F007A1E81 /* TravelLocationsViewController.swift */; };
 		20F45A221B817CBE007A1E81 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20F45A211B817CBE007A1E81 /* MapKit.framework */; };
+		20F45A241B817E54007A1E81 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F45A231B817E54007A1E81 /* Pin.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +39,7 @@
 		20F45A121B817A3C007A1E81 /* VirtualTouristTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTouristTests.swift; sourceTree = "<group>"; };
 		20F45A1F1B817C0F007A1E81 /* TravelLocationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TravelLocationsViewController.swift; path = Controllers/TravelLocationsViewController.swift; sourceTree = "<group>"; };
 		20F45A211B817CBE007A1E81 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		20F45A231B817E54007A1E81 /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Pin.swift; path = Models/Pin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +130,7 @@
 		20F45A1D1B817B6C007A1E81 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				20F45A231B817E54007A1E81 /* Pin.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -237,6 +240,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20F45A241B817E54007A1E81 /* Pin.swift in Sources */,
 				20F459FD1B817A3C007A1E81 /* AppDelegate.swift in Sources */,
 				20F45A201B817C0F007A1E81 /* TravelLocationsViewController.swift in Sources */,
 			);
