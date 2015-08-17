@@ -7,8 +7,13 @@
 //
 
 import UIKit
+import MapKit
 
 class PlacesViewController: UIViewController {
+    
+    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var tableView: UITableView!
+    
     var pin: Pin!
 
     override func viewDidLoad() {
