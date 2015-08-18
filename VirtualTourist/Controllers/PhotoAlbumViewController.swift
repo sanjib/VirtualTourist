@@ -106,10 +106,18 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     // MARK: - CollectionView delegates
     
     func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+        let photo = pin.photos[indexPath.row]
+        if photo.imageFetchInProgress == true {
+            return false
+        }
         return true
     }
     
     func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+        let photo = pin.photos[indexPath.row]
+        if photo.imageFetchInProgress == true {
+            return false
+        }
         return true
     }
     
@@ -148,10 +156,10 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                 if error != nil {
                     println("error fetchImageData: \(error)")
                 } else {
+                    println("got image: \(photo.imageName)")
                     dispatch_async(dispatch_get_main_queue()) {
                         self.collectionView.reloadItemsAtIndexPaths([indexPath])
                     }
-                    println("got image: \(photo.imageName)")
                 }
             }
         }
@@ -160,7 +168,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         let backgroundView = UIView(frame: cell.contentView.frame)
         backgroundView.backgroundColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.7)
         
-        let checkmarkImageView = UIImageView(frame: cell.contentView.frame)
+        let checkmarkImageViewFrame = CGRect(x: cell.contentView.frame.origin.x, y: cell.contentView.frame.origin.y, width: cell.frame.width, height: cell.frame.height)
+        let checkmarkImageView = UIImageView(frame: checkmarkImageViewFrame)
         checkmarkImageView.contentMode = UIViewContentMode.BottomRight
         checkmarkImageView.image = UIImage(named: "checkmark")
         backgroundView.addSubview(checkmarkImageView)

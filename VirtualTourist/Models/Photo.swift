@@ -17,7 +17,7 @@ class Photo {
         self.remotePath = remotePath
     }
     
-    private var imageFetchInProgress: Bool = false
+    var imageFetchInProgress: Bool = false
     
     var localURL: NSURL {
         let url = NSFileManager.defaultManager().URLsForDirectory(NSSearchPathDirectory.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask).first as! NSURL
