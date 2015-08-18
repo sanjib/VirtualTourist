@@ -68,21 +68,28 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="YDx-bF-LmI">
+                                <rect key="frame" x="280.5" y="280.5" width="37" height="37"/>
+                                <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Xyk-E8-TX8" firstAttribute="top" secondItem="eDZ-QQ-wXL" secondAttribute="bottom" id="0pZ-1o-rRq"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Xyk-E8-TX8" secondAttribute="trailing" constant="-16" id="7xf-Q9-Vsg"/>
                             <constraint firstItem="amm-yV-Zez" firstAttribute="top" secondItem="dLq-8u-8mA" secondAttribute="bottom" id="BPY-rV-Y8R"/>
+                            <constraint firstAttribute="centerX" secondItem="YDx-bF-LmI" secondAttribute="centerX" constant="1" id="L7r-Vm-EvE"/>
                             <constraint firstAttribute="trailingMargin" secondItem="dLq-8u-8mA" secondAttribute="trailing" constant="-16" id="Osh-UE-nkG"/>
                             <constraint firstItem="Xyk-E8-TX8" firstAttribute="leading" secondItem="SVa-h2-B0M" secondAttribute="leadingMargin" constant="-16" id="PZd-c5-sUo"/>
                             <constraint firstItem="dLq-8u-8mA" firstAttribute="leading" secondItem="SVa-h2-B0M" secondAttribute="leadingMargin" constant="-16" id="Y3z-wg-yTp"/>
                             <constraint firstItem="Xyk-E8-TX8" firstAttribute="height" secondItem="SVa-h2-B0M" secondAttribute="height" multiplier="1:6" id="atQ-aY-D7z"/>
+                            <constraint firstAttribute="centerY" secondItem="YDx-bF-LmI" secondAttribute="centerY" constant="1" id="mtd-9d-B7V"/>
                             <constraint firstItem="dLq-8u-8mA" firstAttribute="top" secondItem="Xyk-E8-TX8" secondAttribute="bottom" constant="8" id="mvT-lK-Ayc"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Places" id="9WQ-zA-GWT"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="YDx-bF-LmI" id="XGW-aZ-9Y0"/>
                         <outlet property="mapView" destination="Xyk-E8-TX8" id="ygz-a6-iop"/>
                         <outlet property="tableView" destination="dLq-8u-8mA" id="8YK-Dd-yQm"/>
                     </connections>
