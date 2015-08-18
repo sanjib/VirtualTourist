@@ -11,21 +11,83 @@ import MapKit
 
 class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var travelLocationsMapView: MKMapView!
+    @IBOutlet weak var editModeButton: UIBarButtonItem!
+    @IBOutlet weak var toolbar: UIToolbar!
     
+    var pins = [Pin]()
     var selectedPin: Pin? = nil
-
-    var longPressGestureRecognizer: UILongPressGestureRecognizer!
+    var inEditMode = false
+    
     let pinIdentifier = "pinIdentifier"
     let pinSegueIdentifier = "PinSegue"
     
     var dragStateEnded = false
     
+    // MARK: - View lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         travelLocationsMapView.delegate = self
+        addDropPinGestureRecognizer()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         
+        displayEditButtonEnabledState()
+        displayToolbarHiddenState()
+    }
+    
+    // MARK: - Edit mode
+    
+    struct EditModeButtonTitle {
+        static let edit = "Edit"
+        static let done = "Done"
+    }
+    
+    @IBAction func editModeButtonAction(sender: UIBarButtonItem) {
+        inEditMode = inEditMode == true ? false : true
+        
+        if inEditMode == true {
+            editModeButton.title = EditModeButtonTitle.done
+            removeDropPinGestureRecognizer()
+        } else {
+            editModeButton.title = EditModeButtonTitle.edit
+            addDropPinGestureRecognizer()
+        }
+        
+        displayEditButtonEnabledState()
+        displayToolbarHiddenState()
+    }
+    
+    private func displayEditButtonEnabledState() {
+        if pins.count > 0 {
+            editModeButton.enabled = true
+        } else {
+            editModeButton.enabled = false
+        }
+    }
+    
+    private func displayToolbarHiddenState() {
+        if inEditMode == true {
+            toolbar.hidden = false
+        } else {
+            toolbar.hidden = true
+        }
+    }
+    
+    // MARK: - Gesture recognizer
+    
+    var longPressGestureRecognizer: UILongPressGestureRecognizer!
+    
+    func addDropPinGestureRecognizer() {
         longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "dropPin:")
+        longPressGestureRecognizer.minimumPressDuration = 0.4
         view.addGestureRecognizer(longPressGestureRecognizer)
+    }
+    
+    func removeDropPinGestureRecognizer() {
+        view.removeGestureRecognizer(longPressGestureRecognizer)
     }
     
     // MARK: - Pins
@@ -41,6 +103,16 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         
         let pin = Pin(latitude: touchCoordinate.latitude, longitude: touchCoordinate.longitude)
         travelLocationsMapView.addAnnotation(pin)
+        
+        pins.append(pin)
+        displayEditButtonEnabledState()
+    }
+    
+    func deletePin(pin: Pin) {
+        travelLocationsMapView.removeAnnotation(pin)
+        if let indexOfPinToDelete = find(pins, pin) {
+            pins.removeAtIndex(indexOfPinToDelete)
+        }
     }
     
     // MARK: - Map delegates
@@ -76,8 +148,12 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
             return
         }
         
-        selectedPin = view.annotation as? Pin
-        performSegueWithIdentifier(pinSegueIdentifier, sender: self)
+        if inEditMode == true {
+            deletePin(view.annotation as! Pin)
+        } else {
+            selectedPin = view.annotation as? Pin
+            performSegueWithIdentifier(pinSegueIdentifier, sender: self)
+        }
     }
     
     

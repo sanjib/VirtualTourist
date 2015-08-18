@@ -21,17 +21,39 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="lLZ-wm-Z7h">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </mapView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" alpha="0.84999999999999987" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xYP-AL-3Re">
+                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="wof-9d-6cf"/>
+                                    <barButtonItem title="Tap Pins to Delete" id="fhu-lK-v55">
+                                        <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="qn3-0k-g76"/>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="xYP-AL-3Re" firstAttribute="leading" secondItem="EAt-PS-n7U" secondAttribute="leadingMargin" constant="-16" id="8N0-TC-ved"/>
                             <constraint firstAttribute="trailingMargin" secondItem="lLZ-wm-Z7h" secondAttribute="trailing" constant="-16" id="DkR-fe-iw1"/>
                             <constraint firstItem="lLZ-wm-Z7h" firstAttribute="top" secondItem="EAt-PS-n7U" secondAttribute="topMargin" id="HB9-on-xrO"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="xYP-AL-3Re" secondAttribute="trailing" constant="-16" id="Kda-Es-hcy"/>
                             <constraint firstItem="1KS-5m-lHg" firstAttribute="top" secondItem="lLZ-wm-Z7h" secondAttribute="bottom" id="QjN-Et-n7o"/>
                             <constraint firstItem="lLZ-wm-Z7h" firstAttribute="leading" secondItem="EAt-PS-n7U" secondAttribute="leadingMargin" constant="-16" id="a4w-Cb-qb8"/>
+                            <constraint firstItem="1KS-5m-lHg" firstAttribute="top" secondItem="xYP-AL-3Re" secondAttribute="bottom" id="pVD-zO-aAb"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Virtual Tourist" id="VFV-U4-DAG"/>
+                    <navigationItem key="navigationItem" title="Virtual Tourist" id="VFV-U4-DAG">
+                        <barButtonItem key="rightBarButtonItem" title="Edit" id="lrC-tg-YG5">
+                            <connections>
+                                <action selector="editModeButtonAction:" destination="8Ly-oF-yHM" id="ewc-QM-ZMF"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="editModeButton" destination="lrC-tg-YG5" id="PyJ-bI-T9n"/>
+                        <outlet property="toolbar" destination="xYP-AL-3Re" id="MOT-Z8-sgb"/>
                         <outlet property="travelLocationsMapView" destination="lLZ-wm-Z7h" id="43f-cL-nbP"/>
                         <segue destination="MNP-fh-hTR" kind="show" identifier="PinSegue" id="VG0-Nu-8Mj"/>
                     </connections>
@@ -56,7 +78,7 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="100"/>
                             </mapView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="dLq-8u-8mA">
-                                <rect key="frame" x="0.0" y="172" width="600" height="379"/>
+                                <rect key="frame" x="0.0" y="164" width="600" height="387"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PlaceCell" id="8oo-eq-CeR">
@@ -84,7 +106,7 @@
                             <constraint firstItem="dLq-8u-8mA" firstAttribute="leading" secondItem="SVa-h2-B0M" secondAttribute="leadingMargin" constant="-16" id="Y3z-wg-yTp"/>
                             <constraint firstItem="Xyk-E8-TX8" firstAttribute="height" secondItem="SVa-h2-B0M" secondAttribute="height" multiplier="1:6" id="atQ-aY-D7z"/>
                             <constraint firstAttribute="centerY" secondItem="YDx-bF-LmI" secondAttribute="centerY" id="mtd-9d-B7V"/>
-                            <constraint firstItem="dLq-8u-8mA" firstAttribute="top" secondItem="Xyk-E8-TX8" secondAttribute="bottom" constant="8" id="mvT-lK-Ayc"/>
+                            <constraint firstItem="dLq-8u-8mA" firstAttribute="top" secondItem="Xyk-E8-TX8" secondAttribute="bottom" id="mvT-lK-Ayc"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Places" id="9WQ-zA-GWT"/>
