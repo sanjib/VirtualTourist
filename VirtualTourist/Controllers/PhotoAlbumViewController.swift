@@ -13,6 +13,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var toolbar: UIToolbar!
+    @IBOutlet weak var toolbarButton: UIBarButtonItem!
     
     var pin: Pin!
     
@@ -24,6 +26,13 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     
     private let photoPlaceholderImageData = NSData(data: UIImagePNGRepresentation(UIImage(named: "photoPlaceholder")))
     
+    private struct ToolbarButtonTitle {
+        static let create = "New Collection"
+        static let delete = "Delete Selected Photos"
+    }
+    
+    // MARK: - View lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -33,6 +42,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         collectionView.allowsMultipleSelection = true
         activityIndicator.hidesWhenStopped = true
         activityIndicator.stopAnimating()
+        setToolbarButtonTitle()
         
         let tc = tabBarController as! TabBarViewController
         pin = tc.pin
@@ -51,12 +61,16 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         mapView.addAnnotation(pin)
     }
     
-    func getFlickrPhotos() {
+    // MARK: - Photos
+    
+    private func getFlickrPhotos() {
         activityIndicator.startAnimating()
+        toolbarButton.enabled = false
         FlickrClient.sharedInstance().photosSearch(pin) { photoProperties, errorString in
             if errorString != nil {
                 dispatch_async(dispatch_get_main_queue()) {
                     self.activityIndicator.stopAnimating()
+                    self.toolbarButton.enabled = true
                 }
             } else {
                 if let photoProperties = photoProperties {
@@ -67,10 +81,63 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                     }
                     dispatch_async(dispatch_get_main_queue()) {
                         self.activityIndicator.stopAnimating()
+                        self.toolbarButton.enabled = true
                         self.collectionView.reloadData()
                     }
                 }
             }
+        }
+    }
+    
+    private func createNewPhotoCollection() {
+        pin.photos = [Photo]()
+        collectionView.reloadData()
+        getFlickrPhotos()
+    }
+    
+    private func deleteSelectedPhotos() {
+        self.collectionView?.performBatchUpdates({
+            if let itemPaths = self.collectionView?.indexPathsForSelectedItems() {
+                var indicesToDelete = [Int]()
+                for indexPath in itemPaths {
+                    indicesToDelete.append(indexPath.row)
+                }
+                // Sorted indices by descending order because everytime an element E is removed,
+                // the indices of the elements beyond E is reduced by one
+                indicesToDelete.sort(>)
+                for index in indicesToDelete {
+                    self.pin.photos.removeAtIndex(index)
+                }
+                self.collectionView?.deleteItemsAtIndexPaths(itemPaths)
+            }
+            }, completion: nil)
+        setToolbarButtonTitle()
+    }
+    
+    private func userDidSelectPhotos() -> Bool {
+        if let itemPaths = self.collectionView?.indexPathsForSelectedItems() {
+            if itemPaths.count > 0 {
+                return true
+            }
+        }
+        return false
+    }
+    
+    // MARK: - Toolbar
+    
+    @IBAction func toolbarButtonAction(sender: UIBarButtonItem) {
+        if userDidSelectPhotos() == true {
+            deleteSelectedPhotos()
+        } else {
+            createNewPhotoCollection()
+        }
+    }
+    
+    private func setToolbarButtonTitle() {
+        if userDidSelectPhotos() == true {
+            toolbarButton.title = ToolbarButtonTitle.delete
+        } else {
+            toolbarButton.title = ToolbarButtonTitle.create
         }
     }
     
@@ -122,9 +189,11 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        setToolbarButtonTitle()
     }
     
     func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath) {
+        setToolbarButtonTitle()
     }
     
     // MARK: - CollectionView data source

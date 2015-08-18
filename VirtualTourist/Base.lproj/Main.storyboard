@@ -69,7 +69,7 @@
                                 </prototypes>
                             </tableView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="YDx-bF-LmI">
-                                <rect key="frame" x="280.5" y="280.5" width="37" height="37"/>
+                                <rect key="frame" x="281.5" y="281.5" width="37" height="37"/>
                                 <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </activityIndicatorView>
                         </subviews>
@@ -78,12 +78,12 @@
                             <constraint firstItem="Xyk-E8-TX8" firstAttribute="top" secondItem="eDZ-QQ-wXL" secondAttribute="bottom" id="0pZ-1o-rRq"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Xyk-E8-TX8" secondAttribute="trailing" constant="-16" id="7xf-Q9-Vsg"/>
                             <constraint firstItem="amm-yV-Zez" firstAttribute="top" secondItem="dLq-8u-8mA" secondAttribute="bottom" id="BPY-rV-Y8R"/>
-                            <constraint firstAttribute="centerX" secondItem="YDx-bF-LmI" secondAttribute="centerX" constant="1" id="L7r-Vm-EvE"/>
+                            <constraint firstAttribute="centerX" secondItem="YDx-bF-LmI" secondAttribute="centerX" id="L7r-Vm-EvE"/>
                             <constraint firstAttribute="trailingMargin" secondItem="dLq-8u-8mA" secondAttribute="trailing" constant="-16" id="Osh-UE-nkG"/>
                             <constraint firstItem="Xyk-E8-TX8" firstAttribute="leading" secondItem="SVa-h2-B0M" secondAttribute="leadingMargin" constant="-16" id="PZd-c5-sUo"/>
                             <constraint firstItem="dLq-8u-8mA" firstAttribute="leading" secondItem="SVa-h2-B0M" secondAttribute="leadingMargin" constant="-16" id="Y3z-wg-yTp"/>
                             <constraint firstItem="Xyk-E8-TX8" firstAttribute="height" secondItem="SVa-h2-B0M" secondAttribute="height" multiplier="1:6" id="atQ-aY-D7z"/>
-                            <constraint firstAttribute="centerY" secondItem="YDx-bF-LmI" secondAttribute="centerY" constant="1" id="mtd-9d-B7V"/>
+                            <constraint firstAttribute="centerY" secondItem="YDx-bF-LmI" secondAttribute="centerY" id="mtd-9d-B7V"/>
                             <constraint firstItem="dLq-8u-8mA" firstAttribute="top" secondItem="Xyk-E8-TX8" secondAttribute="bottom" constant="8" id="mvT-lK-Ayc"/>
                         </constraints>
                     </view>
@@ -114,7 +114,7 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="100"/>
                             </mapView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="MHT-3L-cBS">
-                                <rect key="frame" x="0.0" y="172" width="600" height="379"/>
+                                <rect key="frame" x="0.0" y="164" width="600" height="343"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="eVP-bM-rDi">
                                     <size key="itemSize" width="136" height="136"/>
@@ -147,22 +147,37 @@
                                 </cells>
                             </collectionView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="KdR-8Y-3HS">
-                                <rect key="frame" x="280.5" y="280.5" width="37" height="37"/>
+                                <rect key="frame" x="281.5" y="281.5" width="37" height="37"/>
                                 <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </activityIndicatorView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1ss-aa-jAC">
+                                <rect key="frame" x="0.0" y="507" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="dhx-2r-kAD"/>
+                                    <barButtonItem title="Item" id="BhC-OZ-AiC">
+                                        <connections>
+                                            <action selector="toolbarButtonAction:" destination="5Vi-PT-L8A" id="Xxc-G7-gsP"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="he3-2E-Umu"/>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="M3f-uN-4cL" firstAttribute="leading" secondItem="WbG-Yb-8bO" secondAttribute="leadingMargin" constant="-16" id="4Wi-Bl-eGq"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="1ss-aa-jAC" secondAttribute="trailing" constant="-16" id="A1r-SB-AYM"/>
                             <constraint firstItem="M3f-uN-4cL" firstAttribute="height" secondItem="WbG-Yb-8bO" secondAttribute="height" multiplier="1:6" id="A7S-a5-KW4"/>
                             <constraint firstItem="M3f-uN-4cL" firstAttribute="top" secondItem="RhF-TC-qDG" secondAttribute="bottom" id="FnZ-PG-MMI"/>
-                            <constraint firstAttribute="centerX" secondItem="KdR-8Y-3HS" secondAttribute="centerX" constant="1" id="IIr-fB-U9R"/>
-                            <constraint firstItem="MHT-3L-cBS" firstAttribute="top" secondItem="M3f-uN-4cL" secondAttribute="bottom" constant="8" id="PTZ-2b-s5O"/>
+                            <constraint firstAttribute="centerX" secondItem="KdR-8Y-3HS" secondAttribute="centerX" id="IIr-fB-U9R"/>
+                            <constraint firstItem="1ss-aa-jAC" firstAttribute="leading" secondItem="WbG-Yb-8bO" secondAttribute="leadingMargin" constant="-16" id="INJ-XV-jsJ"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="MHT-3L-cBS" secondAttribute="trailing" constant="-16" id="Pot-pD-5K7"/>
                             <constraint firstAttribute="trailingMargin" secondItem="M3f-uN-4cL" secondAttribute="trailing" constant="-16" id="SEf-UX-U1h"/>
-                            <constraint firstItem="vDy-oq-EHZ" firstAttribute="top" secondItem="MHT-3L-cBS" secondAttribute="bottom" id="SWh-f9-DSf"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="MHT-3L-cBS" secondAttribute="trailing" constant="-16" id="iBn-w9-MlU"/>
-                            <constraint firstAttribute="centerY" secondItem="KdR-8Y-3HS" secondAttribute="centerY" constant="1" id="shq-kh-dR6"/>
-                            <constraint firstItem="MHT-3L-cBS" firstAttribute="leading" secondItem="WbG-Yb-8bO" secondAttribute="leadingMargin" constant="-16" id="xST-Lf-9XT"/>
+                            <constraint firstItem="vDy-oq-EHZ" firstAttribute="top" secondItem="1ss-aa-jAC" secondAttribute="bottom" id="XnK-Nt-9LG"/>
+                            <constraint firstItem="MHT-3L-cBS" firstAttribute="leading" secondItem="WbG-Yb-8bO" secondAttribute="leadingMargin" constant="-16" id="dCo-DF-mWo"/>
+                            <constraint firstItem="MHT-3L-cBS" firstAttribute="top" secondItem="M3f-uN-4cL" secondAttribute="bottom" id="m6G-5E-FGh"/>
+                            <constraint firstItem="1ss-aa-jAC" firstAttribute="top" secondItem="MHT-3L-cBS" secondAttribute="bottom" id="nk6-sm-HJw"/>
+                            <constraint firstAttribute="centerY" secondItem="KdR-8Y-3HS" secondAttribute="centerY" id="shq-kh-dR6"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Photos" id="oOZ-1H-foZ"/>
@@ -170,6 +185,8 @@
                         <outlet property="activityIndicator" destination="KdR-8Y-3HS" id="tos-R6-PyJ"/>
                         <outlet property="collectionView" destination="MHT-3L-cBS" id="rhn-RK-Ls1"/>
                         <outlet property="mapView" destination="M3f-uN-4cL" id="03c-yu-fUl"/>
+                        <outlet property="toolbar" destination="1ss-aa-jAC" id="n66-hD-jVu"/>
+                        <outlet property="toolbarButton" destination="BhC-OZ-AiC" id="Hv1-fh-OZF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GPi-bT-GGw" userLabel="First Responder" sceneMemberID="firstResponder"/>
