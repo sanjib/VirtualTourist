@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class PlacesViewController: UIViewController {
+class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var tableView: UITableView!
@@ -18,6 +18,8 @@ class PlacesViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.delegate = self
+        tableView.dataSource = self
 
         let tc = tabBarController as! TabBarViewController
         pin = tc.pin
@@ -38,9 +40,39 @@ class PlacesViewController: UIViewController {
                         let place = Place(placeName: placeProperty["placeName"]!, vicinity: placeProperty["vicinity"]!)
                         self.pin.places.append(place)
                     }
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.tableView.reloadData()
+                    }
                 }
             }
         }
+    }
+    
+    // MARK: - TableView delegates
+    
+    
+    
+    // MARK: - TableView data source
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return pin.places.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("PlaceCell", forIndexPath: indexPath) as! UITableViewCell
+        
+        let place = pin.places[indexPath.row]
+        
+        // Configure the cell...
+        
+        cell.textLabel?.text = place.placeName
+        cell.detailTextLabel?.text = place.vicinity
+        
+        return cell
     }
 
 }

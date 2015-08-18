@@ -64,9 +64,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         }
     }
     
-    // MARK: - CollectionView delegates
+    // MARK: - CollectionView layout
     
-    // MARK: Flow layout
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         // Use width in portrait mode; height in landscape
         let deviceOrientation = UIDevice.currentDevice().orientation
@@ -94,7 +93,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         return CGFloat(minimumSpacingBetweenCells)
     }
     
-    // MARK: Cell highlight, selection
+    // MARK: - CollectionView delegates
     
     func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
         return true
