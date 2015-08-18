@@ -19,9 +19,10 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        mapView.userInteractionEnabled = false
         tableView.delegate = self
         tableView.dataSource = self
-        
         activityIndicator.hidesWhenStopped = true
         activityIndicator.stopAnimating()
 
@@ -31,6 +32,15 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if pin.places.count == 0 {
             getGooglePlaces()
         }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.title = "Places"
+        
+        let region = MKCoordinateRegionMakeWithDistance(pin.coordinate, 100_000, 100_000)
+        mapView.setRegion(region, animated: false)
+        mapView.addAnnotation(pin)
     }
     
     func getGooglePlaces() {

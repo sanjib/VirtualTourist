@@ -26,10 +26,11 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        mapView.userInteractionEnabled = false
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.allowsMultipleSelection = true
-        
         activityIndicator.hidesWhenStopped = true
         activityIndicator.stopAnimating()
         
@@ -39,6 +40,15 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         if pin.photos.count == 0 {
             getFlickrPhotos()
         }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.title = "Photos"
+     
+        let region = MKCoordinateRegionMakeWithDistance(pin.coordinate, 100_000, 100_000)
+        mapView.setRegion(region, animated: false)
+        mapView.addAnnotation(pin)
     }
     
     func getFlickrPhotos() {
