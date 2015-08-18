@@ -30,14 +30,6 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         travelLocationsMapView.delegate = self
-        addDropPinGestureRecognizer()
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        displayEditButtonEnabledState()
-        displayToolbarHiddenState()
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveCurrentRegion", name: UIApplicationDidEnterBackgroundNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveCurrentRegion", name: UIApplicationWillTerminateNotification, object: nil)
@@ -47,6 +39,20 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
             currentRegion = NSKeyedUnarchiver.unarchiveObjectWithFile(currentRegionFilePath) as? CoordinateRegion
             travelLocationsMapView.setRegion(currentRegion!.currentRegion, animated: false)
         }
+        
+        addDropPinGestureRecognizer()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        displayEditButtonEnabledState()
+        displayToolbarHiddenState()
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidEnterBackgroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillTerminateNotification, object: nil)
     }
     
     // MARK: - Edit mode
