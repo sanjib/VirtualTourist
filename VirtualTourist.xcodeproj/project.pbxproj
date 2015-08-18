@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		20DF856B1B82A236000BA088 /* PhotoAlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20DF856A1B82A236000BA088 /* PhotoAlbumCollectionViewCell.swift */; };
+		20F3A51C1B82F4EB00C48225 /* CoordinateRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F3A51B1B82F4EB00C48225 /* CoordinateRegion.swift */; };
 		20F459FD1B817A3C007A1E81 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F459FC1B817A3C007A1E81 /* AppDelegate.swift */; };
 		20F45A021B817A3C007A1E81 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20F45A001B817A3C007A1E81 /* Main.storyboard */; };
 		20F45A041B817A3C007A1E81 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20F45A031B817A3C007A1E81 /* Images.xcassets */; };
@@ -39,6 +40,7 @@
 
 /* Begin PBXFileReference section */
 		20DF856A1B82A236000BA088 /* PhotoAlbumCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhotoAlbumCollectionViewCell.swift; path = Views/PhotoAlbumCollectionViewCell.swift; sourceTree = "<group>"; };
+		20F3A51B1B82F4EB00C48225 /* CoordinateRegion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CoordinateRegion.swift; path = Models/CoordinateRegion.swift; sourceTree = "<group>"; };
 		20F459F71B817A3C007A1E81 /* VirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20F459FB1B817A3C007A1E81 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20F459FC1B817A3C007A1E81 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 				20F45A2B1B81934D007A1E81 /* CommonRESTApi.swift */,
 				20F45A2D1B81946C007A1E81 /* FlickrClient.swift */,
 				20F45A2F1B81947D007A1E81 /* GooglePlacesClient.swift */,
+				20F3A51B1B82F4EB00C48225 /* CoordinateRegion.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -291,6 +294,7 @@
 				20F45A201B817C0F007A1E81 /* TravelLocationsViewController.swift in Sources */,
 				20F45A2E1B81946C007A1E81 /* FlickrClient.swift in Sources */,
 				20DF856B1B82A236000BA088 /* PhotoAlbumCollectionViewCell.swift in Sources */,
+				20F3A51C1B82F4EB00C48225 /* CoordinateRegion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -23,6 +23,8 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     
     var dragStateEnded = false
     
+    var currentRegion: CoordinateRegion? = nil
+    
     // MARK: - View lifecycle
     
     override func viewDidLoad() {
@@ -36,6 +38,15 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         
         displayEditButtonEnabledState()
         displayToolbarHiddenState()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveCurrentRegion", name: UIApplicationDidEnterBackgroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveCurrentRegion", name: UIApplicationWillTerminateNotification, object: nil)
+        
+        // Set the region user last viewed
+        if NSFileManager.defaultManager().fileExistsAtPath(currentRegionFilePath) {
+            currentRegion = NSKeyedUnarchiver.unarchiveObjectWithFile(currentRegionFilePath) as? CoordinateRegion
+            travelLocationsMapView.setRegion(currentRegion!.currentRegion, animated: false)
+        }
     }
     
     // MARK: - Edit mode
@@ -165,6 +176,10 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
+    func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
+        currentRegion = CoordinateRegion(region: mapView.region)
+    }
+    
     // MARK: - Navigation
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -174,4 +189,16 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         }
     }
 
+    // MARK: - Helpers
+    
+    var currentRegionFilePath: String {
+        let url = NSFileManager.defaultManager().URLsForDirectory(NSSearchPathDirectory.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask).first as! NSURL
+        return url.URLByAppendingPathComponent("currentRegion").path!
+    }
+    
+    func saveCurrentRegion() {
+        if let currentRegion = currentRegion {
+            NSKeyedArchiver.archiveRootObject(currentRegion, toFile: currentRegionFilePath)
+        }
+    }
 }
