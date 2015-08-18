@@ -14,6 +14,7 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var noPlacesFoundLabel: UILabel!
     
     var pin: Pin!
 
@@ -24,6 +25,7 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.delegate = self
         tableView.dataSource = self
         activityIndicator.hidesWhenStopped = true
+        noPlacesFoundLabel.hidden = true
         activityIndicator.stopAnimating()
 
         let tc = tabBarController as! TabBarViewController
@@ -45,10 +47,13 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func getGooglePlaces() {
         activityIndicator.startAnimating()
+        noPlacesFoundLabel.hidden = true
+        
         GooglePlacesClient.sharedInstance().placesSearch(pin) { placesProperties, errorString in
             if errorString != nil {
                 dispatch_async(dispatch_get_main_queue()) {
                     self.activityIndicator.stopAnimating()
+                    self.noPlacesFoundLabel.hidden = false
                 }
             } else {
                 if let placesProperties = placesProperties {

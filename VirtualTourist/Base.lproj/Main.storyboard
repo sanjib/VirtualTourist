@@ -91,9 +91,15 @@
                                 </prototypes>
                             </tableView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="YDx-bF-LmI">
-                                <rect key="frame" x="281.5" y="281.5" width="37" height="37"/>
+                                <rect key="frame" x="281" y="281" width="37" height="37"/>
                                 <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </activityIndicatorView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This pin has no places." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UWw-YK-MgE">
+                                <rect key="frame" x="212" y="290" width="176.5" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -105,14 +111,17 @@
                             <constraint firstItem="Xyk-E8-TX8" firstAttribute="leading" secondItem="SVa-h2-B0M" secondAttribute="leadingMargin" constant="-16" id="PZd-c5-sUo"/>
                             <constraint firstItem="dLq-8u-8mA" firstAttribute="leading" secondItem="SVa-h2-B0M" secondAttribute="leadingMargin" constant="-16" id="Y3z-wg-yTp"/>
                             <constraint firstItem="Xyk-E8-TX8" firstAttribute="height" secondItem="SVa-h2-B0M" secondAttribute="height" multiplier="1:6" id="atQ-aY-D7z"/>
+                            <constraint firstAttribute="centerY" secondItem="UWw-YK-MgE" secondAttribute="centerY" id="gSR-sT-FLd"/>
                             <constraint firstAttribute="centerY" secondItem="YDx-bF-LmI" secondAttribute="centerY" id="mtd-9d-B7V"/>
                             <constraint firstItem="dLq-8u-8mA" firstAttribute="top" secondItem="Xyk-E8-TX8" secondAttribute="bottom" id="mvT-lK-Ayc"/>
+                            <constraint firstAttribute="centerX" secondItem="UWw-YK-MgE" secondAttribute="centerX" id="tt0-fN-wb9"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Places" id="9WQ-zA-GWT"/>
                     <connections>
                         <outlet property="activityIndicator" destination="YDx-bF-LmI" id="XGW-aZ-9Y0"/>
                         <outlet property="mapView" destination="Xyk-E8-TX8" id="ygz-a6-iop"/>
+                        <outlet property="noPlacesFoundLabel" destination="UWw-YK-MgE" id="KPI-fB-olg"/>
                         <outlet property="tableView" destination="dLq-8u-8mA" id="8YK-Dd-yQm"/>
                     </connections>
                 </viewController>
@@ -169,7 +178,7 @@
                                 </cells>
                             </collectionView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="KdR-8Y-3HS">
-                                <rect key="frame" x="281.5" y="281.5" width="37" height="37"/>
+                                <rect key="frame" x="281" y="281" width="37" height="37"/>
                                 <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </activityIndicatorView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1ss-aa-jAC">
@@ -184,15 +193,23 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="he3-2E-Umu"/>
                                 </items>
                             </toolbar>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This pin has no images." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z2F-Ja-6pm">
+                                <rect key="frame" x="209.5" y="289.5" width="181.5" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="M3f-uN-4cL" firstAttribute="leading" secondItem="WbG-Yb-8bO" secondAttribute="leadingMargin" constant="-16" id="4Wi-Bl-eGq"/>
                             <constraint firstAttribute="trailingMargin" secondItem="1ss-aa-jAC" secondAttribute="trailing" constant="-16" id="A1r-SB-AYM"/>
                             <constraint firstItem="M3f-uN-4cL" firstAttribute="height" secondItem="WbG-Yb-8bO" secondAttribute="height" multiplier="1:6" id="A7S-a5-KW4"/>
+                            <constraint firstAttribute="centerX" secondItem="Z2F-Ja-6pm" secondAttribute="centerX" id="CCq-hq-pR3"/>
                             <constraint firstItem="M3f-uN-4cL" firstAttribute="top" secondItem="RhF-TC-qDG" secondAttribute="bottom" id="FnZ-PG-MMI"/>
                             <constraint firstAttribute="centerX" secondItem="KdR-8Y-3HS" secondAttribute="centerX" id="IIr-fB-U9R"/>
                             <constraint firstItem="1ss-aa-jAC" firstAttribute="leading" secondItem="WbG-Yb-8bO" secondAttribute="leadingMargin" constant="-16" id="INJ-XV-jsJ"/>
+                            <constraint firstAttribute="centerY" secondItem="Z2F-Ja-6pm" secondAttribute="centerY" id="OsD-NV-hmI"/>
                             <constraint firstAttribute="trailingMargin" secondItem="MHT-3L-cBS" secondAttribute="trailing" constant="-16" id="Pot-pD-5K7"/>
                             <constraint firstAttribute="trailingMargin" secondItem="M3f-uN-4cL" secondAttribute="trailing" constant="-16" id="SEf-UX-U1h"/>
                             <constraint firstItem="vDy-oq-EHZ" firstAttribute="top" secondItem="1ss-aa-jAC" secondAttribute="bottom" id="XnK-Nt-9LG"/>
@@ -207,6 +224,7 @@
                         <outlet property="activityIndicator" destination="KdR-8Y-3HS" id="tos-R6-PyJ"/>
                         <outlet property="collectionView" destination="MHT-3L-cBS" id="rhn-RK-Ls1"/>
                         <outlet property="mapView" destination="M3f-uN-4cL" id="03c-yu-fUl"/>
+                        <outlet property="noImagesFoundLabel" destination="Z2F-Ja-6pm" id="ahk-7V-iiR"/>
                         <outlet property="toolbar" destination="1ss-aa-jAC" id="n66-hD-jVu"/>
                         <outlet property="toolbarButton" destination="BhC-OZ-AiC" id="Hv1-fh-OZF"/>
                     </connections>

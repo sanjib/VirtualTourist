@@ -47,7 +47,11 @@ class GooglePlacesClient: CommonRESTApi {
                             placeProperties.append(placeProperty)
                         }
                     }
-                    completionHandler(placeProperties: placeProperties, errorString: nil)
+                    if placeProperties.isEmpty {
+                        completionHandler(placeProperties: nil, errorString: "No places found.")
+                    } else {
+                        completionHandler(placeProperties: placeProperties, errorString: nil)
+                    }
                 } else {
                     completionHandler(placeProperties: nil, errorString: "Couldn't get places information from Google. Please try again later or try a different location.")
                 }

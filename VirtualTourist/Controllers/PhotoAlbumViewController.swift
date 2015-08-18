@@ -15,6 +15,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var toolbar: UIToolbar!
     @IBOutlet weak var toolbarButton: UIBarButtonItem!
+    @IBOutlet weak var noImagesFoundLabel: UILabel!
     
     var pin: Pin!
     
@@ -42,6 +43,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         collectionView.allowsMultipleSelection = true
         activityIndicator.hidesWhenStopped = true
         activityIndicator.stopAnimating()
+        noImagesFoundLabel.hidden = true
         setToolbarButtonTitle()
         
         let tc = tabBarController as! TabBarViewController
@@ -66,11 +68,14 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     private func getFlickrPhotos() {
         activityIndicator.startAnimating()
         toolbarButton.enabled = false
+        noImagesFoundLabel.hidden = true
+        
         FlickrClient.sharedInstance().photosSearch(pin) { photoProperties, errorString in
             if errorString != nil {
                 dispatch_async(dispatch_get_main_queue()) {
                     self.activityIndicator.stopAnimating()
                     self.toolbarButton.enabled = true
+                    self.noImagesFoundLabel.hidden = false
                 }
             } else {
                 if let photoProperties = photoProperties {

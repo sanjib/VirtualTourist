@@ -28,9 +28,11 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     // MARK: - View lifecycle
     
     override func viewDidLoad() {
-        super.viewDidLoad()
+        super.viewDidLoad()        
         travelLocationsMapView.delegate = self
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "OK", style: UIBarButtonItemStyle.Plain, target: nil, action: nil)
         
+        // Trigger saveCurrentRegion when app goes to background or terminates
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveCurrentRegion", name: UIApplicationDidEnterBackgroundNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveCurrentRegion", name: UIApplicationWillTerminateNotification, object: nil)
         

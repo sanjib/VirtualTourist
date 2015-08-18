@@ -17,6 +17,12 @@ class TabBarViewController: UITabBarController {
 
         // Do any additional setup after loading the view.
         println("pin coords: \(pin.coordinate.latitude), \(pin.coordinate.longitude)")
+        
+        
     }
-
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+    }
 }
