@@ -32,6 +32,11 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         static let delete = "Delete Selected Photos"
     }
     
+    private var selectedIndexes = [NSIndexPath]()
+    private var insertedIndexPaths: [NSIndexPath]!
+    private var deletedIndexPaths: [NSIndexPath]!
+    private var updatedIndexPaths: [NSIndexPath]!
+    
     // MARK: - View lifecycle
     
     override func viewDidLoad() {
@@ -76,7 +81,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     lazy var fetchedResultsController: NSFetchedResultsController = {
         let fetchRequest = NSFetchRequest(entityName: "Photo")
         fetchRequest.predicate = NSPredicate(format: "pin == %@", self.pin)
-        fetchRequest.sortDescriptors = []
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "imageName", ascending: true)]
         
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
             managedObjectContext: self.sharedContext,
@@ -108,12 +113,10 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                     }
                     
                     CoreDataStackManager.sharedInstance().saveContext()
-                    self.fetchedResultsController.performFetch(nil)
                     
                     dispatch_async(dispatch_get_main_queue()) {
                         self.activityIndicator.stopAnimating()
                         self.toolbarButton.enabled = true
-                        self.collectionView.reloadData()
                     }
                 }
             }
@@ -126,42 +129,30 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                 let photo = object as! Photo
                 sharedContext.deleteObject(photo)
             }
+            CoreDataStackManager.sharedInstance().saveContext()
         }
-        CoreDataStackManager.sharedInstance().saveContext()
-        fetchedResultsController.performFetch(nil)
-        
-        collectionView.reloadData()
+
         getFlickrPhotos()
     }
     
     private func deleteSelectedPhotos() {
-        collectionView?.performBatchUpdates({
-            if let itemPaths = self.collectionView?.indexPathsForSelectedItems() {
-                for indexPath in itemPaths {
-                    let photo = self.fetchedResultsController.objectAtIndexPath(indexPath as! NSIndexPath) as! Photo
-                    self.sharedContext.deleteObject(photo)
-                }
-                self.collectionView?.deleteItemsAtIndexPaths(itemPaths)
-                CoreDataStackManager.sharedInstance().saveContext()
-                self.fetchedResultsController.performFetch(nil)
-            }
-        }, completion: nil)
-        setToolbarButtonTitle()
-    }
-    
-    private func userDidSelectPhotos() -> Bool {
-        if let itemPaths = self.collectionView?.indexPathsForSelectedItems() {
-            if itemPaths.count > 0 {
-                return true
-            }
+        var photosToDelete = [Photo]()
+        for indexPath in selectedIndexes {
+            photosToDelete.append(fetchedResultsController.objectAtIndexPath(indexPath) as! Photo)
         }
-        return false
+        for photo in photosToDelete {
+            sharedContext.deleteObject(photo)
+        }
+        CoreDataStackManager.sharedInstance().saveContext()
+        
+        selectedIndexes = [NSIndexPath]()
+        setToolbarButtonTitle()
     }
     
     // MARK: - Toolbar
     
     @IBAction func toolbarButtonAction(sender: UIBarButtonItem) {
-        if userDidSelectPhotos() == true {
+        if selectedIndexes.count > 0 {
             deleteSelectedPhotos()
         } else {
             createNewPhotoCollection()
@@ -169,7 +160,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     private func setToolbarButtonTitle() {
-        if userDidSelectPhotos() == true {
+        if selectedIndexes.count > 0 {
             toolbarButton.title = ToolbarButtonTitle.delete
         } else {
             toolbarButton.title = ToolbarButtonTitle.create
@@ -224,10 +215,14 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        selectedIndexes.append(indexPath)
         setToolbarButtonTitle()
     }
     
     func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath) {
+        if let index = find(selectedIndexes, indexPath) {
+            selectedIndexes.removeAtIndex(index)
+        }
         setToolbarButtonTitle()
     }
     
@@ -244,10 +239,14 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellReuseIdentifier, forIndexPath: indexPath) as! PhotoAlbumCollectionViewCell
-
+        configureCell(cell, atIndexPath: indexPath)
+        return cell
+    }
+    
+    // MARK: - Configure cell
+    
+    func configureCell(cell: PhotoAlbumCollectionViewCell, atIndexPath indexPath: NSIndexPath) {
         let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
-        
-        // Configure the cell
         
         if let imageData = photo.imageData {
             println("image exists: \(photo.imageName)")
@@ -279,8 +278,50 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         checkmarkImageView.image = UIImage(named: "checkmark")
         backgroundView.addSubview(checkmarkImageView)
         cell.selectedBackgroundView = backgroundView
-        
-        return cell
     }
-
+    
+    // MARK: - NSFetchedResultsController delegates
+    
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        insertedIndexPaths = [NSIndexPath]()
+        deletedIndexPaths = [NSIndexPath]()
+        updatedIndexPaths = [NSIndexPath]()
+        
+        println("in controllerWillChangeContent")
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        
+        switch type {
+        case .Insert:
+            println("Insert an item")
+            insertedIndexPaths.append(newIndexPath!)
+        case .Delete:
+            println("Delete an item")
+            deletedIndexPaths.append(indexPath!)
+        case .Update:
+            println("Update an item.")
+            updatedIndexPaths.append(indexPath!)
+        case .Move:
+            break
+        default:
+            return
+        }
+    }
+    
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        println("in controllerDidChangeContent. changes.count: \(insertedIndexPaths.count + deletedIndexPaths.count)")
+        
+        collectionView.performBatchUpdates({
+            for indexPath in self.insertedIndexPaths {
+                self.collectionView.insertItemsAtIndexPaths([indexPath])
+            }
+            for indexPath in self.deletedIndexPaths {
+                self.collectionView.deleteItemsAtIndexPaths([indexPath])
+            }
+            for indexPath in self.updatedIndexPaths {
+                self.collectionView.reloadItemsAtIndexPaths([indexPath])
+            }
+        }, completion: nil)
+    }
 }
