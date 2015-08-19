@@ -14,16 +14,14 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate, NSFetc
     @IBOutlet weak var travelLocationsMapView: MKMapView!
     @IBOutlet weak var editModeButton: UIBarButtonItem!
     @IBOutlet weak var toolbar: UIToolbar!
-    
-//    var pins = [Pin]()
+
     var selectedPin: Pin? = nil
     var inEditMode = false
     
     let pinIdentifier = "pinIdentifier"
     let pinSegueIdentifier = "PinSegue"
     
-    var dragStateEnded = false
-    
+    var dragStateEnded = false    
     var currentRegion: CoordinateRegion? = nil
     
     // MARK: - View lifecycle
@@ -93,7 +91,6 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate, NSFetc
     }
     
     private func displayEditButtonEnabledState() {
-//        if pins.count > 0 {
         fetchedResultsController.performFetch(nil)
         if fetchedResultsController.fetchedObjects?.count > 0 {
             editModeButton.enabled = true
@@ -156,18 +153,14 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate, NSFetc
         CoreDataStackManager.sharedInstance().saveContext()
         
         travelLocationsMapView.addAnnotation(pin)
-        
-//        pins.append(pin)
         displayEditButtonEnabledState()
     }
     
     func deletePin(pin: Pin) {
         travelLocationsMapView.removeAnnotation(pin)
-//        if let indexOfPinToDelete = find(pins, pin) {
-//            pins.removeAtIndex(indexOfPinToDelete)
-//        }
         sharedContext.deleteObject(pin)
         CoreDataStackManager.sharedInstance().saveContext()
+        fetchedResultsController.performFetch(nil)
     }
     
     // MARK: - Map delegates

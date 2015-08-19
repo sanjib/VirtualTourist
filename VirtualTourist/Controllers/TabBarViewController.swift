@@ -9,25 +9,5 @@
 import UIKit
 
 class TabBarViewController: UITabBarController {
-
-    var pin: Pin!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-        println("pin coords: \(pin.coordinate.latitude), \(pin.coordinate.longitude)")
-        
-        
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-    }
-    
-//    override func viewWillDisappear(animated: Bool) {
-//        super.viewWillDisappear(animated)
-//        pin = nil
-//    }
+    var pin: Pin!    
 }

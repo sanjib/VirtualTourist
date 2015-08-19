@@ -34,10 +34,6 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let tc = tabBarController as! TabBarViewController
         pin = tc.pin
         
-//        if pin.places.count == 0 {
-//            getGooglePlaces()
-//        }
-        
         // CoreData
         fetchedResultsController.delegate = self
         fetchedResultsController.performFetch(nil)
@@ -91,10 +87,7 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     for placeProperty in placesProperties {
                         println(placeProperty)
                         let place = Place(placeName: placeProperty["placeName"]!, vicinity: placeProperty["vicinity"]!, context: self.sharedContext)
-                        
                         place.pin = self.pin
-                        
-//                        self.pin.places.append(place)
                     }
                     
                     CoreDataStackManager.sharedInstance().saveContext()
@@ -120,7 +113,6 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return pin.places.count
         if let objectCount = fetchedResultsController.fetchedObjects?.count {
             return objectCount
         } else {
@@ -131,7 +123,6 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("PlaceCell", forIndexPath: indexPath) as! UITableViewCell
         
-//        let place = pin.places[indexPath.row]
         let place = fetchedResultsController.objectAtIndexPath(indexPath) as! Place
         
         // Configure the cell...
@@ -141,5 +132,4 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         return cell
     }
-
 }

@@ -19,7 +19,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     @IBOutlet weak var noImagesFoundLabel: UILabel!
     
     var pin: Pin!
-    
     let cellReuseIdentifier = "PhotoCell"
     
     // Cell layout properties
@@ -50,10 +49,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         let tc = tabBarController as! TabBarViewController
         pin = tc.pin
 
-//        if pin.photos.count == 0 {
-//            getFlickrPhotos()
-//        }
-        
         // CoreData
         fetchedResultsController.delegate = self
         fetchedResultsController.performFetch(nil)
@@ -110,9 +105,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                         println(photoProperty)
                         let photo = Photo(imageName: photoProperty["imageName"]!, remotePath: photoProperty["remotePath"]!, context: self.sharedContext)
                         photo.pin = self.pin
-                        
-                        
-//                        self.pin.photos.append(photo)
                     }
                     
                     CoreDataStackManager.sharedInstance().saveContext()
@@ -129,7 +121,14 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     private func createNewPhotoCollection() {
-//        pin.photos = [Photo]()
+        if let fetchedObjects = fetchedResultsController.fetchedObjects {
+            for object in fetchedObjects {
+                let photo = object as! Photo
+                sharedContext.deleteObject(photo)
+            }
+        }
+        CoreDataStackManager.sharedInstance().saveContext()
+        fetchedResultsController.performFetch(nil)
         
         collectionView.reloadData()
         getFlickrPhotos()
@@ -142,9 +141,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                     let photo = self.fetchedResultsController.objectAtIndexPath(indexPath as! NSIndexPath) as! Photo
                     self.sharedContext.deleteObject(photo)
                 }
-                
                 self.collectionView?.deleteItemsAtIndexPaths(itemPaths)
-                
                 CoreDataStackManager.sharedInstance().saveContext()
                 self.fetchedResultsController.performFetch(nil)
             }
@@ -211,9 +208,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     // MARK: - CollectionView delegates
     
     func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
-//        let photo = pin.photos[indexPath.row]
         let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
-        
         if photo.imageFetchInProgress == true {
             return false
         }
@@ -221,9 +216,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
-//        let photo = pin.photos[indexPath.row]
         let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
-        
         if photo.imageFetchInProgress == true {
             return false
         }
@@ -254,8 +247,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellReuseIdentifier, forIndexPath: indexPath) as! PhotoAlbumCollectionViewCell
-        
-//        let photo = pin.photos[indexPath.row]
+
         let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
         
         // Configure the cell
