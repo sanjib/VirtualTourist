@@ -52,10 +52,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         // CoreData
         fetchedResultsController.delegate = self
         fetchedResultsController.performFetch(nil)
-        
-        if fetchedResultsController.fetchedObjects?.count == 0 {
-            getFlickrPhotos()
-        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -65,6 +61,10 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         let region = MKCoordinateRegionMakeWithDistance(pin.coordinate, 100_000, 100_000)
         mapView.setRegion(region, animated: false)
         mapView.addAnnotation(pin)
+        
+        if pin.photos.isEmpty {
+            getFlickrPhotos()
+        }
     }
     
     // MARK: - CoreData
@@ -76,7 +76,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     lazy var fetchedResultsController: NSFetchedResultsController = {
         let fetchRequest = NSFetchRequest(entityName: "Photo")
         fetchRequest.predicate = NSPredicate(format: "pin == %@", self.pin)
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "imageName", ascending: true)]
+        fetchRequest.sortDescriptors = []
         
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
             managedObjectContext: self.sharedContext,
@@ -145,7 +145,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                 CoreDataStackManager.sharedInstance().saveContext()
                 self.fetchedResultsController.performFetch(nil)
             }
-            }, completion: nil)
+        }, completion: nil)
         setToolbarButtonTitle()
     }
     
@@ -238,11 +238,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let objectCount = fetchedResultsController.fetchedObjects?.count {
-            return objectCount
-        } else {
-            return 0
-        }
+        let sectionInfo = self.fetchedResultsController.sections![section] as! NSFetchedResultsSectionInfo
+        return sectionInfo.numberOfObjects
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {

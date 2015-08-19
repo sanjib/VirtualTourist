@@ -50,7 +50,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate, NSFetc
             for object in fetchedObjects {
                 let pin = object as! Pin
                 travelLocationsMapView.addAnnotation(pin)
-            }            
+            }
         }
     }
     
@@ -129,7 +129,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate, NSFetc
     
     lazy var fetchedResultsController: NSFetchedResultsController = {
         let fetchRequest = NSFetchRequest(entityName: "Pin")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: true)]
+        fetchRequest.sortDescriptors = []
         
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
             managedObjectContext: self.sharedContext,

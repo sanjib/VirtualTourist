@@ -27,6 +27,7 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         mapView.userInteractionEnabled = false
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.allowsSelection = false
         activityIndicator.hidesWhenStopped = true
         noPlacesFoundLabel.hidden = true
         activityIndicator.stopAnimating()
@@ -37,10 +38,6 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // CoreData
         fetchedResultsController.delegate = self
         fetchedResultsController.performFetch(nil)
-        
-        if fetchedResultsController.fetchedObjects?.count == 0 {
-            getGooglePlaces()
-        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -50,6 +47,10 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let region = MKCoordinateRegionMakeWithDistance(pin.coordinate, 100_000, 100_000)
         mapView.setRegion(region, animated: false)
         mapView.addAnnotation(pin)
+        
+        if pin.places.isEmpty {
+            getGooglePlaces()
+        }
     }
     
     // MARK: - CoreData
@@ -90,9 +91,6 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
                         place.pin = self.pin
                     }
                     
-                    CoreDataStackManager.sharedInstance().saveContext()
-                    self.fetchedResultsController.performFetch(nil)
-                    
                     dispatch_async(dispatch_get_main_queue()) {
                         self.activityIndicator.stopAnimating()
                         self.tableView.reloadData()
@@ -102,34 +100,66 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
-    // MARK: - TableView delegates
+    // MARK: - TableView delegates & data source
     
-    
-    
-    // MARK: - TableView data source
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        switch (editingStyle) {
+        case .Delete:
+            let place = fetchedResultsController.objectAtIndexPath(indexPath) as! Place
+            sharedContext.deleteObject(place)
+            CoreDataStackManager.sharedInstance().saveContext()
+        default:
+            return
+        }
+    }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let objectCount = fetchedResultsController.fetchedObjects?.count {
-            return objectCount
-        } else {
-            return 0
-        }
+        let sectionInfo = self.fetchedResultsController.sections![section] as! NSFetchedResultsSectionInfo
+        return sectionInfo.numberOfObjects
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("PlaceCell", forIndexPath: indexPath) as! UITableViewCell
+        configureCell(cell, atIndexPath: indexPath)
+        return cell
+    }
+    
+    // MARK: - NSFetchedResultsControllerDelegate
+    
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        tableView.beginUpdates()
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         
+        switch type {
+        case .Insert:
+            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+        case .Delete:
+            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+        case .Update:
+            break
+        case .Move:
+            break
+        default:
+            return
+        }
+    }
+    
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        tableView.endUpdates()
+    }
+    
+    // MARK: - Configure cell
+    
+    func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
         let place = fetchedResultsController.objectAtIndexPath(indexPath) as! Place
-        
-        // Configure the cell...
-        
         cell.textLabel?.text = place.placeName
         cell.detailTextLabel?.text = place.vicinity
-        
-        return cell
     }
 }
