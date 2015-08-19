@@ -8,8 +8,9 @@
 
 import UIKit
 import MapKit
+import CoreData
 
-class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var tableView: UITableView!
@@ -18,6 +19,8 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     var pin: Pin!
 
+    // MARK: - View lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -31,7 +34,15 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let tc = tabBarController as! TabBarViewController
         pin = tc.pin
         
-        if pin.places.count == 0 {
+//        if pin.places.count == 0 {
+//            getGooglePlaces()
+//        }
+        
+        // CoreData
+        fetchedResultsController.delegate = self
+        fetchedResultsController.performFetch(nil)
+        
+        if fetchedResultsController.fetchedObjects?.count == 0 {
             getGooglePlaces()
         }
     }
@@ -44,6 +55,26 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         mapView.setRegion(region, animated: false)
         mapView.addAnnotation(pin)
     }
+    
+    // MARK: - CoreData
+    
+    var sharedContext: NSManagedObjectContext {
+        return CoreDataStackManager.sharedInstance().managedObjectContext!
+    }
+    
+    lazy var fetchedResultsController: NSFetchedResultsController = {
+        let fetchRequest = NSFetchRequest(entityName: "Place")
+        fetchRequest.predicate = NSPredicate(format: "pin == %@", self.pin)
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "placeName", ascending: true)]
+        
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+            managedObjectContext: self.sharedContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil)
+        return fetchedResultsController
+    }()
+    
+    // MARK: - Places
     
     func getGooglePlaces() {
         activityIndicator.startAnimating()
@@ -59,9 +90,16 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 if let placesProperties = placesProperties {
                     for placeProperty in placesProperties {
                         println(placeProperty)
-                        let place = Place(placeName: placeProperty["placeName"]!, vicinity: placeProperty["vicinity"]!)
-                        self.pin.places.append(place)
+                        let place = Place(placeName: placeProperty["placeName"]!, vicinity: placeProperty["vicinity"]!, context: self.sharedContext)
+                        
+                        place.pin = self.pin
+                        
+//                        self.pin.places.append(place)
                     }
+                    
+                    CoreDataStackManager.sharedInstance().saveContext()
+                    self.fetchedResultsController.performFetch(nil)
+                    
                     dispatch_async(dispatch_get_main_queue()) {
                         self.activityIndicator.stopAnimating()
                         self.tableView.reloadData()
@@ -82,13 +120,19 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return pin.places.count
+//        return pin.places.count
+        if let objectCount = fetchedResultsController.fetchedObjects?.count {
+            return objectCount
+        } else {
+            return 0
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("PlaceCell", forIndexPath: indexPath) as! UITableViewCell
         
-        let place = pin.places[indexPath.row]
+//        let place = pin.places[indexPath.row]
+        let place = fetchedResultsController.objectAtIndexPath(indexPath) as! Place
         
         // Configure the cell...
         

@@ -7,12 +7,23 @@
 //
 
 import Foundation
+import CoreData
 
-class Place {
-    var placeName: String
-    var vicinity: String
+@objc(Place)
+
+class Place: NSManagedObject {
+    @NSManaged var placeName: String
+    @NSManaged var vicinity: String
+    @NSManaged var pin: Pin?
     
-    init(placeName: String, vicinity: String) {
+    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    }
+    
+    init(placeName: String, vicinity: String, context: NSManagedObjectContext) {
+        let entity = NSEntityDescription.entityForName("Place", inManagedObjectContext: context)!
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        
         self.placeName = placeName
         self.vicinity = vicinity
     }

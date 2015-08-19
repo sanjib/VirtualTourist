@@ -25,4 +25,9 @@ class TabBarViewController: UITabBarController {
         super.viewWillAppear(animated)
         
     }
+    
+//    override func viewWillDisappear(animated: Bool) {
+//        super.viewWillDisappear(animated)
+//        pin = nil
+//    }
 }

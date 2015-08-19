@@ -8,13 +8,14 @@
 
 import UIKit
 import MapKit
+import CoreData
 
-class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
+class TravelLocationsViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var travelLocationsMapView: MKMapView!
     @IBOutlet weak var editModeButton: UIBarButtonItem!
     @IBOutlet weak var toolbar: UIToolbar!
     
-    var pins = [Pin]()
+//    var pins = [Pin]()
     var selectedPin: Pin? = nil
     var inEditMode = false
     
@@ -43,6 +44,16 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         }
         
         addDropPinGestureRecognizer()
+        
+        // CoreData
+        fetchedResultsController.delegate = self
+        fetchedResultsController.performFetch(nil)
+        if let fetchedObjects = fetchedResultsController.fetchedObjects {
+            for object in fetchedObjects {
+                let pin = object as! Pin
+                travelLocationsMapView.addAnnotation(pin)
+            }            
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -50,6 +61,8 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         
         displayEditButtonEnabledState()
         displayToolbarHiddenState()
+        
+        selectedPin = nil
     }
     
     deinit {
@@ -80,7 +93,9 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     }
     
     private func displayEditButtonEnabledState() {
-        if pins.count > 0 {
+//        if pins.count > 0 {
+        fetchedResultsController.performFetch(nil)
+        if fetchedResultsController.fetchedObjects?.count > 0 {
             editModeButton.enabled = true
         } else {
             editModeButton.enabled = false
@@ -109,6 +124,23 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         view.removeGestureRecognizer(longPressGestureRecognizer)
     }
     
+    // MARK: - CoreData
+    
+    var sharedContext: NSManagedObjectContext {
+        return CoreDataStackManager.sharedInstance().managedObjectContext!
+    }
+    
+    lazy var fetchedResultsController: NSFetchedResultsController = {
+        let fetchRequest = NSFetchRequest(entityName: "Pin")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: true)]
+        
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+            managedObjectContext: self.sharedContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil)
+        return fetchedResultsController
+    }()
+    
     // MARK: - Pins
     
     func dropPin(gestureRecognizer: UIGestureRecognizer) {
@@ -120,18 +152,22 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         let touchPoint = gestureRecognizer.locationInView(travelLocationsMapView)
         let touchCoordinate = travelLocationsMapView.convertPoint(touchPoint, toCoordinateFromView: travelLocationsMapView)
         
-        let pin = Pin(latitude: touchCoordinate.latitude, longitude: touchCoordinate.longitude)
+        let pin = Pin(latitude: touchCoordinate.latitude, longitude: touchCoordinate.longitude, context: sharedContext)
+        CoreDataStackManager.sharedInstance().saveContext()
+        
         travelLocationsMapView.addAnnotation(pin)
         
-        pins.append(pin)
+//        pins.append(pin)
         displayEditButtonEnabledState()
     }
     
     func deletePin(pin: Pin) {
         travelLocationsMapView.removeAnnotation(pin)
-        if let indexOfPinToDelete = find(pins, pin) {
-            pins.removeAtIndex(indexOfPinToDelete)
-        }
+//        if let indexOfPinToDelete = find(pins, pin) {
+//            pins.removeAtIndex(indexOfPinToDelete)
+//        }
+        sharedContext.deleteObject(pin)
+        CoreDataStackManager.sharedInstance().saveContext()
     }
     
     // MARK: - Map delegates
