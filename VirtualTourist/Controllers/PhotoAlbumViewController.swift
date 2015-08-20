@@ -36,6 +36,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     private var insertedIndexPaths: [NSIndexPath]!
     private var deletedIndexPaths: [NSIndexPath]!
     private var updatedIndexPaths: [NSIndexPath]!
+    private var numberOfPhotoCurrentlyDownloading = 0
+    private var getFlickrPhotosMethodRunInProgress = false
     
     // MARK: - View lifecycle
     
@@ -70,6 +72,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         let region = MKCoordinateRegionMakeWithDistance(pin.coordinate, 100_000, 100_000)
         mapView.setRegion(region, animated: false)
         mapView.addAnnotation(pin)
+        
+        displayToolbarEnabledState()
     }
     
     // MARK: - CoreData
@@ -94,8 +98,9 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     
     private func getFlickrPhotos() {
         activityIndicator.startAnimating()
-        toolbarButton.enabled = false
         noImagesFoundLabel.hidden = true
+        toolbarButton.enabled = false
+        getFlickrPhotosMethodRunInProgress = true
         
         FlickrClient.sharedInstance().photosSearch(pin) { photoProperties, errorString in
             if errorString != nil {
@@ -115,10 +120,10 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                     dispatch_async(dispatch_get_main_queue()) {
                         CoreDataStackManager.sharedInstance().saveContext()
                         self.activityIndicator.stopAnimating()
-                        self.toolbarButton.enabled = true
                     }
                 }
             }
+            self.getFlickrPhotosMethodRunInProgress = false
         }
         
     }
@@ -147,6 +152,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         
         selectedIndexes = [NSIndexPath]()
         setToolbarButtonTitle()
+        displayToolbarEnabledState()
     }
     
     // MARK: - Toolbar
@@ -164,6 +170,20 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
             toolbarButton.title = ToolbarButtonTitle.delete
         } else {
             toolbarButton.title = ToolbarButtonTitle.create
+        }
+    }
+    
+    private func displayToolbarEnabledState() {
+        println("PHOTOS currently downloading: \(numberOfPhotoCurrentlyDownloading)")
+        
+        if toolbarButton.title == ToolbarButtonTitle.create {
+            if getFlickrPhotosMethodRunInProgress == true || numberOfPhotoCurrentlyDownloading > 0 {
+                toolbarButton.enabled = false
+            } else {
+                toolbarButton.enabled = true
+            }
+        } else {
+            toolbarButton.enabled = true
         }
     }
     
@@ -200,7 +220,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     
     func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
         let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
-        if photo.imageFetchInProgress == true {
+        if photo.didFetchImage == false {
             return false
         }
         return true
@@ -208,7 +228,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     
     func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
         let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
-        if photo.imageFetchInProgress == true {
+        if photo.didFetchImage == false {
             return false
         }
         return true
@@ -217,6 +237,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         selectedIndexes.append(indexPath)
         setToolbarButtonTitle()
+        displayToolbarEnabledState()
     }
     
     func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath) {
@@ -224,6 +245,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
             selectedIndexes.removeAtIndex(index)
         }
         setToolbarButtonTitle()
+        displayToolbarEnabledState()
     }
     
     // MARK: - CollectionView data source
@@ -255,16 +277,22 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
             cell.activityIndicator.stopAnimating()
             cell.backgroundView = UIImageView(image: UIImage(data: imageData))
         } else {
+            numberOfPhotoCurrentlyDownloading += 1
             cell.backgroundView = UIImageView(image: UIImage(data: photoPlaceholderImageData))
             print("need to get image ...")
             cell.activityIndicator.startAnimating()
-            photo.fetchImageData {
-                println("got image: \(photo.imageName)")
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.collectionView.reloadItemsAtIndexPaths([indexPath])
+            photo.fetchImageData { fetchComplete in
+                if fetchComplete == true {
+                    println("got image: \(photo.imageName)")
+                    self.numberOfPhotoCurrentlyDownloading -= 1
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.displayToolbarEnabledState()
+                    }
                 }
             }
         }
+        displayToolbarEnabledState()
+        
         
         // Selected state properties
         let backgroundView = UIView(frame: cell.contentView.frame)

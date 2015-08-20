@@ -16,8 +16,8 @@ class Photo: NSManagedObject {
     @NSManaged var imageName: String
     @NSManaged var remotePath: String
     @NSManaged var pin: Pin?
+    @NSManaged var didFetchImage: Bool
     
-    var imageFetchInProgress: Bool = false
     private let noPhotoAvailableImageData = NSData(data: UIImagePNGRepresentation(UIImage(named: "noPhotoAvailable")))
     
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
@@ -30,6 +30,7 @@ class Photo: NSManagedObject {
         
         self.imageName = imageName
         self.remotePath = remotePath
+        didFetchImage = false
     }
     
     var localURL: NSURL {
@@ -45,20 +46,25 @@ class Photo: NSManagedObject {
         return imageData
     }
     
-    func fetchImageData(completionHandler: () -> Void) {
-        if imageFetchInProgress == false {
+    func fetchImageData(completionHandler: (fetchComplete: Bool) -> Void) {
+        if didFetchImage == false {
             var localURL = self.localURL
-            imageFetchInProgress = true
             if let url = NSURL(string: remotePath) {
                 NSURLSession.sharedSession().dataTaskWithURL(url) { data, response, error in
-                    if error != nil {
-                        NSFileManager.defaultManager().createFileAtPath(self.localURL.path!, contents: self.noPhotoAvailableImageData, attributes: nil)
-                        self.imageFetchInProgress = false
-                    } else {
-                        NSFileManager.defaultManager().createFileAtPath(self.localURL.path!, contents: data, attributes: nil)
-                        self.imageFetchInProgress = false
-                    }
-                    completionHandler()
+                    println("self.managedObjectContext: \(self.managedObjectContext)")
+                    
+                    if self.managedObjectContext != nil {
+                        if error != nil {
+                            NSFileManager.defaultManager().createFileAtPath(self.localURL.path!, contents: self.noPhotoAvailableImageData, attributes: nil)
+                        } else {
+                            NSFileManager.defaultManager().createFileAtPath(self.localURL.path!, contents: data, attributes: nil)
+                        }
+                    self.didFetchImage = true
+                    completionHandler(fetchComplete: true)
+                    
+                } else {
+                    completionHandler(fetchComplete: false)
+                }
                 }.resume()
             }
         }
@@ -76,21 +82,4 @@ class Photo: NSManagedObject {
             }
         }
     }
-    
-//    deinit {
-//        var localURL = self.localURL
-//        if localURL == nil {
-//            localURL = getLocalURL()
-//        }
-//        
-//        if NSFileManager.defaultManager().fileExistsAtPath(localURL!.path!) {
-//            var error: NSError? = nil
-//            NSFileManager.defaultManager().removeItemAtURL(localURL!, error: &error)
-//            if error != nil {
-//                println("couldn't remove image at: \(localURL!.path!)")
-//            } else {
-//                println("removed image at: \(localURL!.path!)")
-//            }
-//        }
-//    }
 }

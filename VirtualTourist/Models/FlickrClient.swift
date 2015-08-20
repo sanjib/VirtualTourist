@@ -35,7 +35,7 @@ class FlickrClient: CommonRESTApi {
         static let baseURL = "https://api.flickr.com/services/rest/"
         static let photoSourceURL = "https://farm{farmId}.staticflickr.com/{serverId}/{photoId}_{secret}_{imageSize}.jpg"
         static let restApiKey = "67fda1c0b25a2d0f325990f46d42fbb2"
-        static let photosPerPage = 30
+        static let photosPerPage = 21
         static let maxNumberOfResultsReturnedByFlickr = 4000
     }
     
