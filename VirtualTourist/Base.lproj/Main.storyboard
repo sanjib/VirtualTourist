@@ -97,7 +97,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This pin has no places." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UWw-YK-MgE">
                                 <rect key="frame" x="212" y="290" width="176.5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
@@ -117,7 +117,7 @@
                             <constraint firstAttribute="centerX" secondItem="UWw-YK-MgE" secondAttribute="centerX" id="tt0-fN-wb9"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Places" id="9WQ-zA-GWT"/>
+                    <tabBarItem key="tabBarItem" title="Places" image="places" id="9WQ-zA-GWT"/>
                     <connections>
                         <outlet property="activityIndicator" destination="YDx-bF-LmI" id="XGW-aZ-9Y0"/>
                         <outlet property="mapView" destination="Xyk-E8-TX8" id="ygz-a6-iop"/>
@@ -196,7 +196,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This pin has no images." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z2F-Ja-6pm">
                                 <rect key="frame" x="209.5" y="289.5" width="181.5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
@@ -219,7 +219,7 @@
                             <constraint firstAttribute="centerY" secondItem="KdR-8Y-3HS" secondAttribute="centerY" id="shq-kh-dR6"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Photos" id="oOZ-1H-foZ"/>
+                    <tabBarItem key="tabBarItem" title="Photos" image="photos" id="oOZ-1H-foZ"/>
                     <connections>
                         <outlet property="activityIndicator" destination="KdR-8Y-3HS" id="tos-R6-PyJ"/>
                         <outlet property="collectionView" destination="MHT-3L-cBS" id="rhn-RK-Ls1"/>
@@ -271,4 +271,8 @@
             <point key="canvasLocation" x="341" y="426"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="photos" width="700" height="700"/>
+        <image name="places" width="700" height="700"/>
+    </resources>
 </document>
