@@ -92,8 +92,8 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     }
                     
                     dispatch_async(dispatch_get_main_queue()) {
+                        CoreDataStackManager.sharedInstance().saveContext()
                         self.activityIndicator.stopAnimating()
-                        self.tableView.reloadData()
                     }
                 }
             }

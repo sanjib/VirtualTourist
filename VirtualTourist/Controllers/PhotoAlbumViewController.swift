@@ -112,15 +112,15 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                         photo.pin = self.pin
                     }
                     
-                    CoreDataStackManager.sharedInstance().saveContext()
-                    
                     dispatch_async(dispatch_get_main_queue()) {
+                        CoreDataStackManager.sharedInstance().saveContext()
                         self.activityIndicator.stopAnimating()
                         self.toolbarButton.enabled = true
                     }
                 }
             }
         }
+        
     }
     
     private func createNewPhotoCollection() {
@@ -234,10 +234,12 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = self.fetchedResultsController.sections![section] as! NSFetchedResultsSectionInfo
+        println("number Of Cells: \(sectionInfo.numberOfObjects)")
         return sectionInfo.numberOfObjects
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellReuseIdentifier, forIndexPath: indexPath) as! PhotoAlbumCollectionViewCell
         configureCell(cell, atIndexPath: indexPath)
         return cell

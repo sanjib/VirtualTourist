@@ -238,4 +238,31 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate, NSFetc
             NSKeyedArchiver.archiveRootObject(currentRegion, toFile: currentRegionFilePath)
         }
     }
+    
+    // MARK: - NSFetchedResultsController delegates
+    
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        println("will change content")
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        switch type {
+        case .Insert:
+            println("insert")
+            break
+        case .Delete:
+            println("delete")
+            break
+        case .Update:
+            println("update")
+            break
+        case .Move:
+            println("move")
+            break
+        }
+    }
+    
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        println("did change content")
+    }
 }
