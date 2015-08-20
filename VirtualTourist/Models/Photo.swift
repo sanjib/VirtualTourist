@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import CoreData
 
 @objc(Photo)
@@ -17,6 +18,7 @@ class Photo: NSManagedObject {
     @NSManaged var pin: Pin?
     
     var imageFetchInProgress: Bool = false
+    private let noPhotoAvailableImageData = NSData(data: UIImagePNGRepresentation(UIImage(named: "noPhotoAvailable")))
     
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
@@ -43,19 +45,20 @@ class Photo: NSManagedObject {
         return imageData
     }
     
-    func fetchImageData(completionHandler: (data: NSData?, error: NSError?) -> Void) {
+    func fetchImageData(completionHandler: () -> Void) {
         if imageFetchInProgress == false {
             var localURL = self.localURL
             imageFetchInProgress = true
             if let url = NSURL(string: remotePath) {
                 NSURLSession.sharedSession().dataTaskWithURL(url) { data, response, error in
                     if error != nil {
-                        completionHandler(data: nil, error: error)
+                        NSFileManager.defaultManager().createFileAtPath(self.localURL.path!, contents: self.noPhotoAvailableImageData, attributes: nil)
+                        self.imageFetchInProgress = false
                     } else {
                         NSFileManager.defaultManager().createFileAtPath(self.localURL.path!, contents: data, attributes: nil)
                         self.imageFetchInProgress = false
-                        completionHandler(data: data, error: nil)
                     }
+                    completionHandler()
                 }.resume()
             }
         }

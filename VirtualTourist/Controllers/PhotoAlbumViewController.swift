@@ -57,6 +57,10 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         // CoreData
         fetchedResultsController.delegate = self
         fetchedResultsController.performFetch(nil)
+        
+        if pin.photos.isEmpty {
+            getFlickrPhotos()
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -66,10 +70,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         let region = MKCoordinateRegionMakeWithDistance(pin.coordinate, 100_000, 100_000)
         mapView.setRegion(region, animated: false)
         mapView.addAnnotation(pin)
-        
-        if pin.photos.isEmpty {
-            getFlickrPhotos()
-        }
     }
     
     // MARK: - CoreData
@@ -258,14 +258,10 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
             cell.backgroundView = UIImageView(image: UIImage(data: photoPlaceholderImageData))
             print("need to get image ...")
             cell.activityIndicator.startAnimating()
-            photo.fetchImageData { data, error in
-                if error != nil {
-                    println("error fetchImageData: \(error)")
-                } else {
-                    println("got image: \(photo.imageName)")
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.collectionView.reloadItemsAtIndexPaths([indexPath])
-                    }
+            photo.fetchImageData {
+                println("got image: \(photo.imageName)")
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.collectionView.reloadItemsAtIndexPaths([indexPath])
                 }
             }
         }

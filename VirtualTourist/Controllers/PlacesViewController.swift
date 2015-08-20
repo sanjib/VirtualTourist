@@ -38,6 +38,10 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // CoreData
         fetchedResultsController.delegate = self
         fetchedResultsController.performFetch(nil)
+        
+        if pin.places.isEmpty {
+            getGooglePlaces()
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -47,10 +51,6 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let region = MKCoordinateRegionMakeWithDistance(pin.coordinate, 100_000, 100_000)
         mapView.setRegion(region, animated: false)
         mapView.addAnnotation(pin)
-        
-        if pin.places.isEmpty {
-            getGooglePlaces()
-        }
     }
     
     // MARK: - CoreData
