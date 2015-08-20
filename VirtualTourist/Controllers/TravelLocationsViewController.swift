@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import CoreData
 
-class TravelLocationsViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsControllerDelegate {
+class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var travelLocationsMapView: MKMapView!
     @IBOutlet weak var editModeButton: UIBarButtonItem!
     @IBOutlet weak var toolbar: UIToolbar!
@@ -44,11 +44,9 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate, NSFetc
         addDropPinGestureRecognizer()
         
         // CoreData
-        fetchedResultsController.delegate = self
-        fetchedResultsController.performFetch(nil)
-        if let fetchedObjects = fetchedResultsController.fetchedObjects {
-            for object in fetchedObjects {
-                let pin = object as! Pin
+        let pins = fetchAllPins()
+        if !pins.isEmpty {
+            for pin in pins {
                 travelLocationsMapView.addAnnotation(pin)
             }
         }
@@ -91,8 +89,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate, NSFetc
     }
     
     private func displayEditButtonEnabledState() {
-        fetchedResultsController.performFetch(nil)
-        if fetchedResultsController.fetchedObjects?.count > 0 {
+        if fetchAllPins().count > 0 {
             editModeButton.enabled = true
         } else {
             editModeButton.enabled = false
@@ -127,16 +124,18 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate, NSFetc
         return CoreDataStackManager.sharedInstance().managedObjectContext!
     }
     
-    lazy var fetchedResultsController: NSFetchedResultsController = {
-        let fetchRequest = NSFetchRequest(entityName: "Pin")
-        fetchRequest.sortDescriptors = []
+    func fetchAllPins() -> [Pin] {
+        let fetchRequest = NSFetchRequest()
+        fetchRequest.entity = NSEntityDescription.entityForName("Pin", inManagedObjectContext: sharedContext)
         
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-            managedObjectContext: self.sharedContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil)
-        return fetchedResultsController
-    }()
+        var error: NSError? = nil
+        var results = sharedContext.executeFetchRequest(fetchRequest, error: &error)
+        if let error = error {
+            println("error fetching pins: \(error.localizedDescription)")
+            return [Pin]()
+        }
+        return results as! [Pin]
+    }
     
     // MARK: - Pins
     
@@ -153,6 +152,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate, NSFetc
         CoreDataStackManager.sharedInstance().saveContext()
         
         travelLocationsMapView.addAnnotation(pin)
+        
         displayEditButtonEnabledState()
     }
     
@@ -160,7 +160,6 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate, NSFetc
         travelLocationsMapView.removeAnnotation(pin)
         sharedContext.deleteObject(pin)
         CoreDataStackManager.sharedInstance().saveContext()
-        fetchedResultsController.performFetch(nil)
     }
     
     // MARK: - Map delegates
@@ -176,26 +175,27 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate, NSFetc
         pinView!.animatesDrop = true
         pinView!.draggable = true
         
-        // immediately select the pinView (needs to be selected first, then dragged)
-        // so that user can drag it to a new location if desired
+        // immediately select the pinView (needs to be selected first to be dragged)
         pinView!.setSelected(true, animated: false)
         
         return pinView
     }
     
     func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
-        // deselect the pin immediately after selection so that:
-        // - user can select it for an actual segue (pin gets selected after being dragged to a new location)
-        // - user can select the pin again after viewing an album (pin remains selected after user selection)
+        // deselect pin and setSelected state to true
+        // this allows any pin on the map to be moved to a new location with a
+        // single long press gesture or with a single tap segue to photo album
         mapView.deselectAnnotation(view.annotation, animated: false)
+        view.setSelected(true, animated: false)
         
-        // as a pin will automatically get selected after being dragged to a new location
-        // we want avoid an automatic segue so we track this with variable dragStateEnded
+        // Update Pin
         if dragStateEnded == true {
+            CoreDataStackManager.sharedInstance().saveContext()
             dragStateEnded = false
             return
         }
         
+        // Delete Pin, else segue
         if inEditMode == true {
             deletePin(view.annotation as! Pin)
         } else {
@@ -203,7 +203,6 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate, NSFetc
             performSegueWithIdentifier(pinSegueIdentifier, sender: self)
         }
     }
-    
     
     func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
         
@@ -239,30 +238,4 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate, NSFetc
         }
     }
     
-    // MARK: - NSFetchedResultsController delegates
-    
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
-        println("will change content")
-    }
-    
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-        switch type {
-        case .Insert:
-            println("insert")
-            break
-        case .Delete:
-            println("delete")
-            break
-        case .Update:
-            println("update")
-            break
-        case .Move:
-            println("move")
-            break
-        }
-    }
-    
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        println("did change content")
-    }
 }
