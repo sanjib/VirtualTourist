@@ -97,6 +97,10 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     // MARK: - Photos
     
     private func getFlickrPhotos() {
+        if pin.photoPropertiesFetchInProgress == false {
+            return
+        }
+        
         activityIndicator.startAnimating()
         noImagesFoundLabel.hidden = true
         toolbarButton.enabled = false
@@ -125,6 +129,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
             }
             self.getFlickrPhotosMethodRunInProgress = false
         }
+            
         
     }
     
@@ -220,7 +225,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     
     func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
         let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
-        if photo.didFetchImage == false {
+        if photo.didFetchImageData == false {
             return false
         }
         return true
@@ -228,7 +233,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     
     func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
         let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
-        if photo.didFetchImage == false {
+        if photo.didFetchImageData == false {
             return false
         }
         return true

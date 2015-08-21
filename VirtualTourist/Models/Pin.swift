@@ -15,6 +15,7 @@ import CoreData
 class Pin: NSManagedObject, MKAnnotation {
     @NSManaged var latitude: Double
     @NSManaged var longitude: Double
+    @NSManaged var photoPropertiesFetchInProgress: Bool
     @NSManaged var photos: [Photo]
     @NSManaged var places: [Place]
     
@@ -28,6 +29,7 @@ class Pin: NSManagedObject, MKAnnotation {
         
         self.latitude = latitude
         self.longitude = longitude
+        photoPropertiesFetchInProgress = false
     }
     
     var coordinate: CLLocationCoordinate2D {

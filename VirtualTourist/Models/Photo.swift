@@ -16,7 +16,7 @@ class Photo: NSManagedObject {
     @NSManaged var imageName: String
     @NSManaged var remotePath: String
     @NSManaged var pin: Pin?
-    @NSManaged var didFetchImage: Bool
+    @NSManaged var didFetchImageData: Bool
     
     private let noPhotoAvailableImageData = NSData(data: UIImagePNGRepresentation(UIImage(named: "noPhotoAvailable")))
     
@@ -30,7 +30,7 @@ class Photo: NSManagedObject {
         
         self.imageName = imageName
         self.remotePath = remotePath
-        didFetchImage = false
+        didFetchImageData = false
     }
     
     var localURL: NSURL {
@@ -47,24 +47,22 @@ class Photo: NSManagedObject {
     }
     
     func fetchImageData(completionHandler: (fetchComplete: Bool) -> Void) {
-        if didFetchImage == false {
+        if didFetchImageData == false {
             var localURL = self.localURL
             if let url = NSURL(string: remotePath) {
                 NSURLSession.sharedSession().dataTaskWithURL(url) { data, response, error in
-                    println("self.managedObjectContext: \(self.managedObjectContext)")
-                    
+                    println("self.managedObjectContext: \(self.managedObjectContext)")                    
                     if self.managedObjectContext != nil {
                         if error != nil {
                             NSFileManager.defaultManager().createFileAtPath(self.localURL.path!, contents: self.noPhotoAvailableImageData, attributes: nil)
                         } else {
                             NSFileManager.defaultManager().createFileAtPath(self.localURL.path!, contents: data, attributes: nil)
                         }
-                    self.didFetchImage = true
-                    completionHandler(fetchComplete: true)
-                    
-                } else {
-                    completionHandler(fetchComplete: false)
-                }
+                        self.didFetchImageData = true
+                        completionHandler(fetchComplete: true)
+                    } else {
+                        completionHandler(fetchComplete: false)
+                    }
                 }.resume()
             }
         }
