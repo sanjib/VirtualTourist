@@ -97,13 +97,14 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     // MARK: - Photos
     
     private func getFlickrPhotos() {
+        activityIndicator.startAnimating()
+        
         if pin.photoPropertiesFetchInProgress == true {
             return
         } else {
             pin.photoPropertiesFetchInProgress = true
         }
         
-        activityIndicator.startAnimating()
         noImagesFoundLabel.hidden = true
         toolbarButton.enabled = false
 //        getFlickrPhotosMethodRunInProgress = true
@@ -125,7 +126,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                     
                     dispatch_async(dispatch_get_main_queue()) {
                         CoreDataStackManager.sharedInstance().saveContext()
-                        self.activityIndicator.stopAnimating()
+//                        self.activityIndicator.stopAnimating()
                     }
                 }
             }
@@ -327,6 +328,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         deletedIndexPaths = [NSIndexPath]()
         updatedIndexPaths = [NSIndexPath]()
         
+        self.activityIndicator.stopAnimating()
         println("in controllerWillChangeContent")
     }
     

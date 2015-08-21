@@ -152,14 +152,58 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         CoreDataStackManager.sharedInstance().saveContext()
         
         travelLocationsMapView.addAnnotation(pin)
-        
         displayEditButtonEnabledState()
+        getFlickrPhotoProperties(pin)
     }
     
     func deletePin(pin: Pin) {
         travelLocationsMapView.removeAnnotation(pin)
         sharedContext.deleteObject(pin)
         CoreDataStackManager.sharedInstance().saveContext()
+    }
+    
+    func updatePin(pin: Pin) {
+        if !pin.photos.isEmpty {
+            for photo in pin.photos {
+                photo.pin = nil
+            }
+        }
+        if !pin.places.isEmpty {
+            for place in pin.places {
+                place.pin = nil
+            }
+        }
+        CoreDataStackManager.sharedInstance().saveContext()
+        getFlickrPhotoProperties(pin)
+    }
+    
+    // MARK: - Photos
+    
+    // Pre-fetch photo data from Flickr as soon as a pin is dropped
+    func getFlickrPhotoProperties(pin: Pin) {
+        if pin.photoPropertiesFetchInProgress == true {
+            return
+        } else {
+            pin.photoPropertiesFetchInProgress = true
+        }
+        
+        FlickrClient.sharedInstance().photosSearch(pin) { photoProperties, errorString in
+            if errorString != nil {
+
+            } else {
+                if let photoProperties = photoProperties {
+                    for photoProperty in photoProperties {
+                        println(photoProperty)
+                        let photo = Photo(imageName: photoProperty["imageName"]!, remotePath: photoProperty["remotePath"]!, context: self.sharedContext)
+                        photo.pin = pin
+                    }
+                    dispatch_async(dispatch_get_main_queue()) {
+                        CoreDataStackManager.sharedInstance().saveContext()
+                    }
+                }
+            }
+            pin.photoPropertiesFetchInProgress = false
+        }
     }
     
     // MARK: - Map delegates
@@ -188,18 +232,20 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         mapView.deselectAnnotation(view.annotation, animated: false)
         view.setSelected(true, animated: false)
         
+        let pin = view.annotation as! Pin
+        
         // Update Pin
         if dragStateEnded == true {
-            CoreDataStackManager.sharedInstance().saveContext()
+            updatePin(pin)
             dragStateEnded = false
             return
         }
         
         // Delete Pin, else segue
         if inEditMode == true {
-            deletePin(view.annotation as! Pin)
+            deletePin(pin)
         } else {
-            selectedPin = view.annotation as? Pin
+            selectedPin = pin
             performSegueWithIdentifier(pinSegueIdentifier, sender: self)
         }
     }
