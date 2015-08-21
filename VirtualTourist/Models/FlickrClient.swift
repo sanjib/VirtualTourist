@@ -195,17 +195,12 @@ class FlickrClient: CommonRESTApi {
             numberOfPages = totalResults / Constants.photosPerPage
         }
         
-        println("total results: \(totalResults)")
-        println("results per page: \(numberOfPages)")
-        
         let randomPageNumber: Int?
         if numberOfPages > 1 {
             randomPageNumber = Int(arc4random_uniform(UInt32(numberOfPages))) + 1 // add 1 since page numbers start at 1
         } else {
             randomPageNumber = 1
         }
-        
-        println("random page number: \(randomPageNumber)")
         return randomPageNumber
     }
 }

@@ -131,7 +131,6 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         var error: NSError? = nil
         var results = sharedContext.executeFetchRequest(fetchRequest, error: &error)
         if let error = error {
-            println("error fetching pins: \(error.localizedDescription)")
             return [Pin]()
         }
         return results as! [Pin]
@@ -193,7 +192,6 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
             } else {
                 if let photoProperties = photoProperties {
                     for photoProperty in photoProperties {
-                        println(photoProperty)
                         let photo = Photo(imageName: photoProperty["imageName"]!, remotePath: photoProperty["remotePath"]!, context: self.sharedContext)
                         photo.pin = pin
                     }

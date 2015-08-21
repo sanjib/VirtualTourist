@@ -38,7 +38,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     private var deletedIndexPaths: [NSIndexPath]!
     private var updatedIndexPaths: [NSIndexPath]!
     private var numberOfPhotoCurrentlyDownloading = 0
-//    private var getFlickrPhotosMethodRunInProgress = false
     
     // MARK: - View lifecycle
     
@@ -108,7 +107,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         
         noImagesFoundLabel.hidden = true
         toolbarButton.enabled = false
-//        getFlickrPhotosMethodRunInProgress = true
         
         FlickrClient.sharedInstance().photosSearch(pin) { photoProperties, errorString in
             if errorString != nil {
@@ -120,22 +118,17 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
             } else {
                 if let photoProperties = photoProperties {
                     for photoProperty in photoProperties {
-                        println(photoProperty)
                         let photo = Photo(imageName: photoProperty["imageName"]!, remotePath: photoProperty["remotePath"]!, context: self.sharedContext)
                         photo.pin = self.pin
                     }
                     
                     dispatch_async(dispatch_get_main_queue()) {
                         CoreDataStackManager.sharedInstance().saveContext()
-//                        self.activityIndicator.stopAnimating()
                     }
                 }
             }
-//            self.getFlickrPhotosMethodRunInProgress = false
             self.pin.photoPropertiesFetchInProgress = false
         }
-            
-        
     }
     
     private func createNewPhotoCollection() {
@@ -146,7 +139,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
             }
             CoreDataStackManager.sharedInstance().saveContext()
         }
-
         getFlickrPhotos()
     }
     
@@ -184,10 +176,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     private func displayToolbarEnabledState() {
-        println("PHOTOS currently downloading: \(numberOfPhotoCurrentlyDownloading)")
-        
         if toolbarButton.title == ToolbarButtonTitle.create {
-//            if getFlickrPhotosMethodRunInProgress == true || numberOfPhotoCurrentlyDownloading > 0 {
             if pin.photoPropertiesFetchInProgress == true || numberOfPhotoCurrentlyDownloading > 0 {
                 toolbarButton.enabled = false
             } else {
@@ -203,30 +192,21 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        // Lay out the collection view so that cells take up 1/3 of the width,
-        // with no space in between.
-        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         layout.minimumLineSpacing = minimumSpacingPerCell
         layout.minimumInteritemSpacing = minimumSpacingPerCell
         
         var width: CGFloat!
         if UIApplication.sharedApplication().statusBarOrientation.isLandscape == true {
-            println("collectionview width: \(collectionView.frame.width)")
             width = (CGFloat(collectionView.frame.size.width) / cellsPerRowInLandscpaeMode) - (minimumSpacingPerCell - (minimumSpacingPerCell / cellsPerRowInLandscpaeMode))
         } else {
-            println("collectionview width: \(collectionView.frame.width)")
             width = (CGFloat(collectionView.frame.size.width) / cellsPerRowInPortraitMode) - (minimumSpacingPerCell - (minimumSpacingPerCell / cellsPerRowInPortraitMode))
         }
         
         layout.itemSize = CGSize(width: width, height: width)
         collectionView.collectionViewLayout = layout
     }
-    
-//    override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
-//        super.didRotateFromInterfaceOrientation(fromInterfaceOrientation)
-//        collectionView.performBatchUpdates(nil, completion: nil)
-//    }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
@@ -273,7 +253,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = self.fetchedResultsController.sections![section] as! NSFetchedResultsSectionInfo
-        println("number Of Cells: \(sectionInfo.numberOfObjects)")
         return sectionInfo.numberOfObjects
     }
     
@@ -290,21 +269,17 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
         
         if let imageData = photo.imageData {
-            println("image exists: \(photo.imageName)")
             cell.activityIndicator.stopAnimating()
             cell.backgroundView = UIImageView(image: UIImage(data: imageData))
         } else {
             cell.backgroundView = UIImageView(image: UIImage(data: photoPlaceholderImageData))
-            print("need to get image ...")
             cell.activityIndicator.startAnimating()
             
             if photo.fetchInProgress == false {
                 numberOfPhotoCurrentlyDownloading += 1
                 photo.fetchImageData { fetchComplete in
                     self.numberOfPhotoCurrentlyDownloading -= 1
-                    
                     if fetchComplete == true {
-                        println("got image: \(photo.imageName)")
                         dispatch_async(dispatch_get_main_queue()) {
                             self.displayToolbarEnabledState()
                         }
@@ -314,7 +289,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         }
         
         displayToolbarEnabledState()
-        
         
         // Selected state properties
         let backgroundView = UIView(frame: cell.contentView.frame)
@@ -336,31 +310,23 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         updatedIndexPaths = [NSIndexPath]()
         
         self.activityIndicator.stopAnimating()
-        println("in controllerWillChangeContent")
     }
     
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         
         switch type {
         case .Insert:
-            println("Insert an item")
             insertedIndexPaths.append(newIndexPath!)
         case .Delete:
-            println("Delete an item")
             deletedIndexPaths.append(indexPath!)
         case .Update:
-            println("Update an item.")
             updatedIndexPaths.append(indexPath!)
-        case .Move:
-            break
         default:
             return
         }
     }
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        println("in controllerDidChangeContent. changes.count: \(insertedIndexPaths.count + deletedIndexPaths.count)")
-        
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {        
         collectionView.performBatchUpdates({
             for indexPath in self.insertedIndexPaths {
                 self.collectionView.insertItemsAtIndexPaths([indexPath])

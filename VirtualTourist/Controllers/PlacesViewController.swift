@@ -86,7 +86,6 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
             } else {
                 if let placesProperties = placesProperties {
                     for placeProperty in placesProperties {
-                        println(placeProperty)
                         let place = Place(placeName: placeProperty["placeName"]!, vicinity: placeProperty["vicinity"]!, context: self.sharedContext)
                         place.pin = self.pin
                     }
@@ -142,10 +141,6 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
             tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
         case .Delete:
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-        case .Update:
-            break
-        case .Move:
-            break
         default:
             return
         }

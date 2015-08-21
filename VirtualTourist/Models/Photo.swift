@@ -53,7 +53,6 @@ class Photo: NSManagedObject {
             var localURL = self.localURL
             if let url = NSURL(string: remotePath) {
                 NSURLSession.sharedSession().dataTaskWithURL(url) { data, response, error in
-                    println("self.managedObjectContext: \(self.managedObjectContext)")                    
                     if self.managedObjectContext != nil {
                         if error != nil {
                             NSFileManager.defaultManager().createFileAtPath(self.localURL.path!, contents: self.noPhotoAvailableImageData, attributes: nil)
@@ -77,9 +76,7 @@ class Photo: NSManagedObject {
             var error: NSError? = nil
             NSFileManager.defaultManager().removeItemAtURL(localURL, error: &error)
             if error != nil {
-                println("couldn't remove image at: \(imageName)")
-            } else {
-                println("removed image at: \(imageName)")
+                NSLog("Couldn't remove image: \(imageName)")
             }
         }
     }
