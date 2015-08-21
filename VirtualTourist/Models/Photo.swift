@@ -19,6 +19,7 @@ class Photo: NSManagedObject {
     @NSManaged var didFetchImageData: Bool
     
     private let noPhotoAvailableImageData = NSData(data: UIImagePNGRepresentation(UIImage(named: "noPhotoAvailable")))
+    var fetchInProgress = false
     
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
@@ -47,7 +48,8 @@ class Photo: NSManagedObject {
     }
     
     func fetchImageData(completionHandler: (fetchComplete: Bool) -> Void) {
-        if didFetchImageData == false {
+        if didFetchImageData == false && fetchInProgress == false {
+            fetchInProgress = true
             var localURL = self.localURL
             if let url = NSURL(string: remotePath) {
                 NSURLSession.sharedSession().dataTaskWithURL(url) { data, response, error in
@@ -63,6 +65,7 @@ class Photo: NSManagedObject {
                     } else {
                         completionHandler(fetchComplete: false)
                     }
+                    self.fetchInProgress = false
                 }.resume()
             }
         }

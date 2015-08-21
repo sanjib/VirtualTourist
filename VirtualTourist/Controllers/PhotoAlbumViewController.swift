@@ -37,7 +37,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     private var deletedIndexPaths: [NSIndexPath]!
     private var updatedIndexPaths: [NSIndexPath]!
     private var numberOfPhotoCurrentlyDownloading = 0
-    private var getFlickrPhotosMethodRunInProgress = false
+//    private var getFlickrPhotosMethodRunInProgress = false
     
     // MARK: - View lifecycle
     
@@ -97,14 +97,16 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     // MARK: - Photos
     
     private func getFlickrPhotos() {
-        if pin.photoPropertiesFetchInProgress == false {
+        if pin.photoPropertiesFetchInProgress == true {
             return
+        } else {
+            pin.photoPropertiesFetchInProgress = true
         }
         
         activityIndicator.startAnimating()
         noImagesFoundLabel.hidden = true
         toolbarButton.enabled = false
-        getFlickrPhotosMethodRunInProgress = true
+//        getFlickrPhotosMethodRunInProgress = true
         
         FlickrClient.sharedInstance().photosSearch(pin) { photoProperties, errorString in
             if errorString != nil {
@@ -127,7 +129,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                     }
                 }
             }
-            self.getFlickrPhotosMethodRunInProgress = false
+//            self.getFlickrPhotosMethodRunInProgress = false
+            self.pin.photoPropertiesFetchInProgress = false
         }
             
         
@@ -182,7 +185,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         println("PHOTOS currently downloading: \(numberOfPhotoCurrentlyDownloading)")
         
         if toolbarButton.title == ToolbarButtonTitle.create {
-            if getFlickrPhotosMethodRunInProgress == true || numberOfPhotoCurrentlyDownloading > 0 {
+//            if getFlickrPhotosMethodRunInProgress == true || numberOfPhotoCurrentlyDownloading > 0 {
+            if pin.photoPropertiesFetchInProgress == true || numberOfPhotoCurrentlyDownloading > 0 {
                 toolbarButton.enabled = false
             } else {
                 toolbarButton.enabled = true
@@ -282,20 +286,25 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
             cell.activityIndicator.stopAnimating()
             cell.backgroundView = UIImageView(image: UIImage(data: imageData))
         } else {
-            numberOfPhotoCurrentlyDownloading += 1
             cell.backgroundView = UIImageView(image: UIImage(data: photoPlaceholderImageData))
             print("need to get image ...")
             cell.activityIndicator.startAnimating()
-            photo.fetchImageData { fetchComplete in
-                if fetchComplete == true {
-                    println("got image: \(photo.imageName)")
+            
+            if photo.fetchInProgress == false {
+                numberOfPhotoCurrentlyDownloading += 1
+                photo.fetchImageData { fetchComplete in
                     self.numberOfPhotoCurrentlyDownloading -= 1
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.displayToolbarEnabledState()
+                    
+                    if fetchComplete == true {
+                        println("got image: \(photo.imageName)")
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.displayToolbarEnabledState()
+                        }
                     }
                 }
             }
         }
+        
         displayToolbarEnabledState()
         
         
