@@ -22,8 +22,9 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     let cellReuseIdentifier = "PhotoCell"
     
     // Cell layout properties
-    let minimumSpacingBetweenCells = 5
-    let cellsPerRowInPortraitMode = 3
+    let cellsPerRowInPortraitMode: CGFloat = 2
+    let cellsPerRowInLandscpaeMode: CGFloat = 3
+    let minimumSpacingPerCell: CGFloat = 5
     
     private let photoPlaceholderImageData = NSData(data: UIImagePNGRepresentation(UIImage(named: "photoPlaceholder")))
     
@@ -199,31 +200,37 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     
     // MARK: - CollectionView layout
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        // Use width in portrait mode; height in landscape
-        let deviceOrientation = UIDevice.currentDevice().orientation
-        var widthForCollection: CGFloat!
-        if (deviceOrientation == UIDeviceOrientation.Portrait) || (deviceOrientation == UIDeviceOrientation.PortraitUpsideDown) {
-            widthForCollection = view.frame.width
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        // Lay out the collection view so that cells take up 1/3 of the width,
+        // with no space in between.
+        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        layout.minimumLineSpacing = minimumSpacingPerCell
+        layout.minimumInteritemSpacing = minimumSpacingPerCell
+        
+        var width: CGFloat!
+        if UIApplication.sharedApplication().statusBarOrientation.isLandscape == true {
+            println("collectionview width: \(collectionView.frame.width)")
+            width = (CGFloat(collectionView.frame.size.width) / cellsPerRowInLandscpaeMode) - (minimumSpacingPerCell - (minimumSpacingPerCell / cellsPerRowInLandscpaeMode))
         } else {
-            widthForCollection = view.frame.height
+            println("collectionview width: \(collectionView.frame.width)")
+            width = (CGFloat(collectionView.frame.size.width) / cellsPerRowInPortraitMode) - (minimumSpacingPerCell - (minimumSpacingPerCell / cellsPerRowInPortraitMode))
         }
         
-        // To determine width of a cell we divide frame width by cells per row
-        // Then compensate it by subtracting minimum spacing between cells
-        // The last cell doesn't need compensation for spacing
-        let width = Float(widthForCollection / CGFloat(cellsPerRowInPortraitMode)) -
-            Float(minimumSpacingBetweenCells - (minimumSpacingBetweenCells / cellsPerRowInPortraitMode))
-        let height = width
-        return CGSize(width: CGFloat(width), height: CGFloat(height))
+        layout.itemSize = CGSize(width: width, height: width)
+        collectionView.collectionViewLayout = layout
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
-        return CGFloat(minimumSpacingBetweenCells)
-    }
+//    override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
+//        super.didRotateFromInterfaceOrientation(fromInterfaceOrientation)
+//        collectionView.performBatchUpdates(nil, completion: nil)
+//    }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
-        return CGFloat(minimumSpacingBetweenCells)
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        collectionView.performBatchUpdates(nil, completion: nil)
     }
     
     // MARK: - CollectionView delegates
