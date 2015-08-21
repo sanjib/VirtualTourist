@@ -22,8 +22,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     let cellReuseIdentifier = "PhotoCell"
     
     // Cell layout properties
-    let cellsPerRowInPortraitMode: CGFloat = 2
-    let cellsPerRowInLandscpaeMode: CGFloat = 3
+    let cellsPerRowInPortraitMode: CGFloat = 3
+    let cellsPerRowInLandscpaeMode: CGFloat = 6
     let minimumSpacingPerCell: CGFloat = 5
     
     private let photoPlaceholderImageData = NSData(data: UIImagePNGRepresentation(UIImage(named: "photoPlaceholder")))
