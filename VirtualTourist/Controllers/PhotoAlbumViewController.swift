@@ -79,7 +79,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     // MARK: - CoreData
     
     var sharedContext: NSManagedObjectContext {
-        return CoreDataStackManager.sharedInstance().managedObjectContext!
+        return CoreDataStackManager.sharedInstance.managedObjectContext!
     }
     
     lazy var fetchedResultsController: NSFetchedResultsController = {
@@ -108,7 +108,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         noImagesFoundLabel.hidden = true
         toolbarButton.enabled = false
         
-        FlickrClient.sharedInstance().photosSearch(pin) { photoProperties, errorString in
+        FlickrClient.sharedInstance.photosSearch(pin) { photoProperties, errorString in
             if errorString != nil {
                 dispatch_async(dispatch_get_main_queue()) {
                     self.activityIndicator.stopAnimating()
@@ -123,7 +123,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                     }
                     
                     dispatch_async(dispatch_get_main_queue()) {
-                        CoreDataStackManager.sharedInstance().saveContext()
+                        CoreDataStackManager.sharedInstance.saveContext()
                     }
                 }
             }
@@ -137,7 +137,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                 let photo = object as! Photo
                 sharedContext.deleteObject(photo)
             }
-            CoreDataStackManager.sharedInstance().saveContext()
+            CoreDataStackManager.sharedInstance.saveContext()
         }
         getFlickrPhotos()
     }
@@ -150,7 +150,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         for photo in photosToDelete {
             sharedContext.deleteObject(photo)
         }
-        CoreDataStackManager.sharedInstance().saveContext()
+        CoreDataStackManager.sharedInstance.saveContext()
         
         selectedIndexes = [NSIndexPath]()
         setToolbarButtonTitle()

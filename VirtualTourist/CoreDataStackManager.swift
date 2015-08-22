@@ -12,12 +12,8 @@ import CoreData
 let SQLITE_FILE_NAME = "VirtualTourist.sqlite"
 
 class CoreDataStackManager {
-    class func sharedInstance() -> CoreDataStackManager {
-        struct Shared {
-            static let instance = CoreDataStackManager()
-        }
-        return Shared.instance
-    }
+
+    static let sharedInstance = CoreDataStackManager()
     
     lazy var applicationDocumentDirectory: NSURL = {
         let url = NSFileManager.defaultManager().URLsForDirectory(NSSearchPathDirectory.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask).first as! NSURL

@@ -10,14 +10,9 @@ import Foundation
 
 class GooglePlacesClient: CommonRESTApi {
     
-    class func sharedInstance() -> GooglePlacesClient {
-        struct Shared {
-            static let instance = GooglePlacesClient()
-        }
-        return Shared.instance
-    }
+    static let sharedInstance = GooglePlacesClient()
     
-    override init() {
+    private override init() {
         super.init()
         super.additionalMethodParams = [
             "key": Constants.restApiKey

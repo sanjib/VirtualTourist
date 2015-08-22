@@ -121,7 +121,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     // MARK: - CoreData
     
     var sharedContext: NSManagedObjectContext {
-        return CoreDataStackManager.sharedInstance().managedObjectContext!
+        return CoreDataStackManager.sharedInstance.managedObjectContext!
     }
     
     func fetchAllPins() -> [Pin] {
@@ -148,7 +148,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         let touchCoordinate = travelLocationsMapView.convertPoint(touchPoint, toCoordinateFromView: travelLocationsMapView)
         
         let pin = Pin(latitude: touchCoordinate.latitude, longitude: touchCoordinate.longitude, context: sharedContext)
-        CoreDataStackManager.sharedInstance().saveContext()
+        CoreDataStackManager.sharedInstance.saveContext()
         
         travelLocationsMapView.addAnnotation(pin)
         displayEditButtonEnabledState()
@@ -158,7 +158,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     func deletePin(pin: Pin) {
         travelLocationsMapView.removeAnnotation(pin)
         sharedContext.deleteObject(pin)
-        CoreDataStackManager.sharedInstance().saveContext()
+        CoreDataStackManager.sharedInstance.saveContext()
     }
     
     func updatePin(pin: Pin) {
@@ -172,7 +172,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
                 place.pin = nil
             }
         }
-        CoreDataStackManager.sharedInstance().saveContext()
+        CoreDataStackManager.sharedInstance.saveContext()
         getFlickrPhotoProperties(pin)
     }
     
@@ -186,7 +186,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
             pin.photoPropertiesFetchInProgress = true
         }
         
-        FlickrClient.sharedInstance().photosSearch(pin) { photoProperties, errorString in
+        FlickrClient.sharedInstance.photosSearch(pin) { photoProperties, errorString in
             if errorString != nil {
 
             } else {
@@ -196,7 +196,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
                         photo.pin = pin
                     }
                     dispatch_async(dispatch_get_main_queue()) {
-                        CoreDataStackManager.sharedInstance().saveContext()
+                        CoreDataStackManager.sharedInstance.saveContext()
                     }
                 }
             }

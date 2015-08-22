@@ -14,14 +14,10 @@ import Foundation
 let bboxEdge = 0.1
 
 class FlickrClient: CommonRESTApi {
-    class func sharedInstance() -> FlickrClient {
-        struct Shared {
-            static let instance = FlickrClient()
-        }
-        return Shared.instance
-    }
+
+    static let sharedInstance = FlickrClient()
     
-    override init() {
+    private override init() {
         super.init()
         super.additionalMethodParams = [
             "api_key": Constants.restApiKey,

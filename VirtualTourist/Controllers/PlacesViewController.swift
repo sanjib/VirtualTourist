@@ -56,7 +56,7 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
     // MARK: - CoreData
     
     var sharedContext: NSManagedObjectContext {
-        return CoreDataStackManager.sharedInstance().managedObjectContext!
+        return CoreDataStackManager.sharedInstance.managedObjectContext!
     }
     
     lazy var fetchedResultsController: NSFetchedResultsController = {
@@ -77,7 +77,7 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         activityIndicator.startAnimating()
         noPlacesFoundLabel.hidden = true
         
-        GooglePlacesClient.sharedInstance().placesSearch(pin) { placesProperties, errorString in
+        GooglePlacesClient.sharedInstance.placesSearch(pin) { placesProperties, errorString in
             if errorString != nil {
                 dispatch_async(dispatch_get_main_queue()) {
                     self.activityIndicator.stopAnimating()
@@ -91,7 +91,7 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     }
                     
                     dispatch_async(dispatch_get_main_queue()) {
-                        CoreDataStackManager.sharedInstance().saveContext()
+                        CoreDataStackManager.sharedInstance.saveContext()
                         self.activityIndicator.stopAnimating()
                     }
                 }
@@ -107,7 +107,7 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         case .Delete:
             let place = fetchedResultsController.objectAtIndexPath(indexPath) as! Place
             sharedContext.deleteObject(place)
-            CoreDataStackManager.sharedInstance().saveContext()
+            CoreDataStackManager.sharedInstance.saveContext()
         default:
             return
         }
