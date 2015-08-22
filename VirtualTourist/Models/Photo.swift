@@ -10,8 +10,6 @@ import Foundation
 import UIKit
 import CoreData
 
-@objc(Photo)
-
 class Photo: NSManagedObject {
     @NSManaged var imageName: String
     @NSManaged var remotePath: String

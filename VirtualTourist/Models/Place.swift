@@ -9,8 +9,6 @@
 import Foundation
 import CoreData
 
-@objc(Place)
-
 class Place: NSManagedObject {
     @NSManaged var placeName: String
     @NSManaged var vicinity: String
