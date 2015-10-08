@@ -15,3 +15,8 @@ Fetches interesting Places related to a pin. Allows users to delete places for a
 
 <b>Video demo:</b>
 https://youtu.be/vMn74FKFrvc
+
+![Map view - drop pins](https://raw.githubusercontent.com/sanjibahmad/VirtualTourist/master/Screenshots/virtual-tourist-map.png)
+![Map view - edit pins](https://raw.githubusercontent.com/sanjibahmad/VirtualTourist/master/Screenshots/virtual-tourist-map-edit.png)
+![Photos](https://raw.githubusercontent.com/sanjibahmad/VirtualTourist/master/Screenshots/virtual-tourist-photos.png)
+![Places](https://raw.githubusercontent.com/sanjibahmad/VirtualTourist/master/Screenshots/virtual-tourist-places.png)
