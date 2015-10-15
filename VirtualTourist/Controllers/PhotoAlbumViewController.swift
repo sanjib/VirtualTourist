@@ -26,7 +26,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     let cellsPerRowInLandscpaeMode: CGFloat = 6
     let minimumSpacingPerCell: CGFloat = 5
     
-    private let photoPlaceholderImageData = NSData(data: UIImagePNGRepresentation(UIImage(named: "photoPlaceholder")))
+    private let photoPlaceholderImageData = NSData(data: UIImagePNGRepresentation(UIImage(named: "photoPlaceholder")!)!)
     
     private struct ToolbarButtonTitle {
         static let create = "New Collection"
@@ -58,7 +58,11 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
 
         // CoreData
         fetchedResultsController.delegate = self
-        fetchedResultsController.performFetch(nil)
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            NSLog("Fetch failed: \(error)")
+        }
         
         if pin.photos.isEmpty {
             getFlickrPhotos()
@@ -238,7 +242,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath) {
-        if let index = find(selectedIndexes, indexPath) {
+        if let index = selectedIndexes.indexOf(indexPath) {
             selectedIndexes.removeAtIndex(index)
         }
         setToolbarButtonTitle()
@@ -252,7 +256,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let sectionInfo = self.fetchedResultsController.sections![section] as! NSFetchedResultsSectionInfo
+        let sectionInfo = self.fetchedResultsController.sections![section]
         return sectionInfo.numberOfObjects
     }
     

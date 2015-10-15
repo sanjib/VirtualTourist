@@ -26,10 +26,11 @@ class CommonRESTApi {
         static let noInternet = "You appear to be offline, please connect to the Internet to use Virtual Tourist."
         static let invalidURL = "Invalid URL"
         static let emptyURL = "Empty URL"
+        static let jsonParseFailed = "Could not parse JSON"
     }
     
     func httpGet(urlString: String, completionHandler: (result: AnyObject!, error: NSError?) -> Void) {
-        if IJReachability.isConnectedToNetwork() == false {
+        if Reachability.isConnectedToNetwork() == false {
             completionHandler(result: nil, error: NSError(domain: ErrorMessage.domain, code: 1, userInfo: [NSLocalizedDescriptionKey : ErrorMessage.noInternet]))
             return
         }
@@ -47,7 +48,7 @@ class CommonRESTApi {
                         completionHandler(result: nil, error: error)
                         return
                     }
-                    self.parseJSONData(data, completionHandler: completionHandler)
+                    self.parseJSONData(data!, completionHandler: completionHandler)
                 }
                 task.resume()
             } else {
@@ -88,18 +89,18 @@ class CommonRESTApi {
             /* Append it */
             urlVars += [key + "=" + "\(escapedValue!)"]
         }
-        return (!urlVars.isEmpty ? "?" : "") + join("&", urlVars)
+        return (!urlVars.isEmpty ? "?" : "") + urlVars.joinWithSeparator("&")
     }
     
     // MARK: - Helpers for JSON parsing
     
     private func parseJSONData(data: NSData, completionHandler: (result: AnyObject!, error: NSError?) -> Void) {
-        var parsingError: NSError? = nil
-        let parsedResult: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &parsingError)
-        if let error = parsingError {
-            completionHandler(result: nil, error: error)
-        } else {
+        
+        do {
+            let parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)
             completionHandler(result: parsedResult, error: nil)
+        } catch {
+            completionHandler(result: nil, error: NSError(domain: ErrorMessage.domain, code: 1, userInfo: [NSLocalizedDescriptionKey : ErrorMessage.jsonParseFailed]))
         }
     }
 }

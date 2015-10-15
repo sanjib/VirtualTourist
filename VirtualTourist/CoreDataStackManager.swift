@@ -16,7 +16,7 @@ class CoreDataStackManager {
     static let sharedInstance = CoreDataStackManager()
     
     lazy var applicationDocumentDirectory: NSURL = {
-        let url = NSFileManager.defaultManager().URLsForDirectory(NSSearchPathDirectory.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask).first as! NSURL
+        let url = NSFileManager.defaultManager().URLsForDirectory(NSSearchPathDirectory.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask).first!
         return url
     }()
     
@@ -29,15 +29,10 @@ class CoreDataStackManager {
         var coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
         let url = self.applicationDocumentDirectory.URLByAppendingPathComponent(SQLITE_FILE_NAME)
         
-        var error: NSError? = nil
-        if coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil, error: &error) == nil {
-            coordinator = nil
-            let dict = NSMutableDictionary()
-            dict[NSLocalizedDescriptionKey] = "Failed to init perisistent coordinator"
-            dict[NSLocalizedFailureReasonErrorKey] = "There was an error adding a persistent store type"
-            dict[NSUnderlyingErrorKey] = error
-            error = NSError(domain: "VirtualTourist", code: 9999, userInfo: dict as [NSObject:AnyObject])
-            NSLog("CoreDataStackManager persistentStoreCoordinator error \(error), \(error?.userInfo)")
+        do {
+           try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+        } catch {
+            NSLog("CoreDataStackManager persistentStoreCoordinator error \(error)")
             abort()
         }
         return coordinator
@@ -55,10 +50,13 @@ class CoreDataStackManager {
     
     func saveContext() {
         if let context = self.managedObjectContext {
-            var error: NSError? = nil
-            if context.hasChanges && !context.save(&error) {
-                NSLog("CoreDataStackManager saveContext error \(error), \(error?.userInfo)")
-                abort()
+            if context.hasChanges {
+                do {
+                    try context.save()
+                } catch {
+                    NSLog("CoreDataStackManager saveContext error \(error)")
+                    abort()
+                }
             }
         }
     }

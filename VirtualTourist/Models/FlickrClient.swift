@@ -158,7 +158,7 @@ class FlickrClient: CommonRESTApi {
                 completionHandler(randomPageNumber: nil, errorString: error?.localizedDescription)
             } else {
                 if let photos = result["photos"] as? NSDictionary {
-                    if let total = (photos["total"] as? String)?.toInt() {
+                    if let total = Int((photos["total"] as? String)!) {
                         if total > 0 {
                             if let randomPageNumber = self.photoSearchGetRandomPageNumber(total) {
                                 completionHandler(randomPageNumber: randomPageNumber, errorString: nil)

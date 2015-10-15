@@ -16,7 +16,7 @@ class Photo: NSManagedObject {
     @NSManaged var pin: Pin?
     @NSManaged var didFetchImageData: Bool
     
-    private let noPhotoAvailableImageData = NSData(data: UIImagePNGRepresentation(UIImage(named: "noPhotoAvailable")))
+    private let noPhotoAvailableImageData = NSData(data: UIImagePNGRepresentation(UIImage(named: "noPhotoAvailable")!)!)
     var fetchInProgress = false
     
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
@@ -33,7 +33,7 @@ class Photo: NSManagedObject {
     }
     
     var localURL: NSURL {
-        let url = NSFileManager.defaultManager().URLsForDirectory(NSSearchPathDirectory.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask).first as! NSURL
+        let url = NSFileManager.defaultManager().URLsForDirectory(NSSearchPathDirectory.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask).first!
         return url.URLByAppendingPathComponent(imageName)
     }
     
@@ -48,7 +48,7 @@ class Photo: NSManagedObject {
     func fetchImageData(completionHandler: (fetchComplete: Bool) -> Void) {
         if didFetchImageData == false && fetchInProgress == false {
             fetchInProgress = true
-            var localURL = self.localURL
+            
             if let url = NSURL(string: remotePath) {
                 NSURLSession.sharedSession().dataTaskWithURL(url) { data, response, error in
                     if self.managedObjectContext != nil {
@@ -71,9 +71,9 @@ class Photo: NSManagedObject {
     override func prepareForDeletion() {
         super.prepareForDeletion()
         if NSFileManager.defaultManager().fileExistsAtPath(localURL.path!) {
-            var error: NSError? = nil
-            NSFileManager.defaultManager().removeItemAtURL(localURL, error: &error)
-            if error != nil {
+            do {
+                try NSFileManager.defaultManager().removeItemAtURL(localURL)
+            } catch {
                 NSLog("Couldn't remove image: \(imageName)")
             }
         }

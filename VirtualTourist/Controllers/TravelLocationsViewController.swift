@@ -128,12 +128,12 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         let fetchRequest = NSFetchRequest()
         fetchRequest.entity = NSEntityDescription.entityForName("Pin", inManagedObjectContext: sharedContext)
         
-        var error: NSError? = nil
-        var results = sharedContext.executeFetchRequest(fetchRequest, error: &error)
-        if let error = error {
+        do {
+            let results = try sharedContext.executeFetchRequest(fetchRequest)
+            return results as! [Pin]
+        } catch {
             return [Pin]()
         }
-        return results as! [Pin]
     }
     
     // MARK: - Pins
@@ -206,7 +206,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     
     // MARK: - Map delegates
     
-    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(pinIdentifier) as? MKPinAnnotationView
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: pinIdentifier)
@@ -223,7 +223,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         return pinView
     }
     
-    func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         // deselect pin and setSelected state to true
         // this allows any pin on the map to be moved to a new location with a
         // single long press gesture or with a single tap segue to photo album
@@ -248,7 +248,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
-    func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
+    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
         
         // track the immediate result of an .Ending pin drag state
         if newState == MKAnnotationViewDragState.Ending {
@@ -256,7 +256,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
-    func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         currentRegion = CoordinateRegion(region: mapView.region)
     }
     
@@ -272,7 +272,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     // MARK: - Helpers
     
     var currentRegionFilePath: String {
-        let url = NSFileManager.defaultManager().URLsForDirectory(NSSearchPathDirectory.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask).first as! NSURL
+        let url = NSFileManager.defaultManager().URLsForDirectory(NSSearchPathDirectory.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask).first!
         return url.URLByAppendingPathComponent("currentRegion").path!
     }
     

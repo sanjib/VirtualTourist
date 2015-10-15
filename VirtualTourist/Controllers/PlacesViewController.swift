@@ -37,7 +37,11 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         // CoreData
         fetchedResultsController.delegate = self
-        fetchedResultsController.performFetch(nil)
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            NSLog("Fetch failed: \(error)")
+        }
         
         if pin.places.isEmpty {
             getGooglePlaces()
@@ -118,12 +122,12 @@ class PlacesViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = self.fetchedResultsController.sections![section] as! NSFetchedResultsSectionInfo
-        return sectionInfo.numberOfObjects
+        let sectionInfo = self.fetchedResultsController.sections?[section]
+        return sectionInfo!.numberOfObjects
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("PlaceCell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("PlaceCell", forIndexPath: indexPath)
         configureCell(cell, atIndexPath: indexPath)
         return cell
     }
